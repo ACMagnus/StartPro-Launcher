@@ -2,7 +2,7 @@
 
 StartPro Launcher（SPL）的官方静态下载站，通过 GitHub Pages 发布。
 
-- 最新版本：**1.1.4**
+- 最新版本：**1.1.5**
 - 平台：Windows 10 / 11 x64
 - 下载：见站点首页的 Windows 完整包与源码包
 - 页面：单文件 `index.html`，图片以内嵌 WebP 提供，无外部前端依赖
@@ -21,8 +21,8 @@ python3 -m http.server 8080
 ## 校验
 
 ```text
-319d9e8f443caf272aa589565846b0d7d8ee26861c9c5191bd00737ac302156f  StartPro-Launcher-1.1.4-bat.zip
-f692339c96a2380660bb41764bd3fd69261d5ec2bfc69489e5b6ada7c5a3411e  StartPro-Launcher-1.1.4-source.zip
+71670b4a219dc192f8b534a9b1abf126098aaeed628fb3d427ac43cf0f019aac  StartPro-Launcher-1.1.5-bat.zip
+2831c45322255c90c30da56955b655d157e8a22c5dc1083742043238c0992b72  StartPro-Launcher-1.1.5-source.zip
 ```
 
 ## 说明
