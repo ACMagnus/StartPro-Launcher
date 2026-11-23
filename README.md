@@ -169,6 +169,8 @@ source/              完整 Electron 源码
 
 如果 SPL 帮你省了装版本、修 Mod 的时间，点一个 **Star** 就是最直接的宣传。也欢迎在 [Issues](https://github.com/ACMagnus/StartPro-Launcher/issues) 反馈 Bug，或到 [Discussions](https://github.com/ACMagnus/StartPro-Launcher/discussions) 聊聊玩法和建议。
 
+想参与开发或提交 PR，请先读 [CONTRIBUTING.md](CONTRIBUTING.md)。
+
 ## License
 
 [MIT](LICENSE) © 2026 竹下一刀魂
