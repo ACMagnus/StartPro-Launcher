@@ -18,7 +18,8 @@
 [**下载 Windows 完整包**](https://github.com/ACMagnus/StartPro-Launcher/releases/download/v1.2.1/StartPro-Launcher-1.2.1-bat.zip) ·
 [**下载源码**](https://github.com/ACMagnus/StartPro-Launcher/releases/download/v1.2.1/StartPro-Launcher-1.2.1-source.zip) ·
 [**官方网站**](https://acmagnus.github.io/StartPro-Launcher/) ·
-[**问题反馈**](https://github.com/ACMagnus/StartPro-Launcher/issues)
+[**问题反馈**](https://github.com/ACMagnus/StartPro-Launcher/issues) ·
+[**讨论区**](https://github.com/ACMagnus/StartPro-Launcher/discussions)
 
 </div>
 
@@ -163,7 +164,7 @@ source/              完整 Electron 源码
 
 ## 支持这个项目
 
-如果 SPL 帮你省了装版本、修 Mod 的时间，点一个 **Star** 就是最直接的宣传。也欢迎在 [Issues](https://github.com/ACMagnus/StartPro-Launcher/issues) 里反馈 Bug 或提出新功能。
+如果 SPL 帮你省了装版本、修 Mod 的时间，点一个 **Star** 就是最直接的宣传。也欢迎在 [Issues](https://github.com/ACMagnus/StartPro-Launcher/issues) 反馈 Bug，或到 [Discussions](https://github.com/ACMagnus/StartPro-Launcher/discussions) 聊聊玩法和建议。
 
 ## License
 

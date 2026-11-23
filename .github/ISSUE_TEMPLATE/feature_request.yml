@@ -1,0 +1,32 @@
+name: 功能建议
+description: 提出新功能、体验改进或兼容性需求
+title: "[Feature] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        请说明使用场景和希望达到的效果，不需要先写实现方案。
+  - type: textarea
+    id: problem
+    attributes:
+      label: 你遇到的问题 / 使用场景
+      placeholder: 例如：每次换整合包都要手动改 Java 路径...
+    validations:
+      required: true
+  - type: textarea
+    id: solution
+    attributes:
+      label: 希望增加的功能
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: 你目前是怎么绕过的
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: 提交前确认
+      options:
+        - label: 我已搜索现有 Issues 和 Discussions，没有重复建议
+          required: true
