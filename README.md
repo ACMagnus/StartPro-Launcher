@@ -8,6 +8,8 @@
 
 把版本下载、加载器安装、Mod 管理、启动和排错，放进一个干净的界面。
 
+*A PCL2-style Minecraft launcher for Windows — real downloads, mod loader install, one-click updates and a configurable AI assistant.*
+
 [![Latest Release](https://img.shields.io/github/v/release/ACMagnus/StartPro-Launcher?style=flat-square&color=1e6fd9&label=release)](https://github.com/ACMagnus/StartPro-Launcher/releases/latest)
 [![Downloads](https://img.shields.io/github/downloads/ACMagnus/StartPro-Launcher/total?style=flat-square&color=2ea043&label=downloads)](https://github.com/ACMagnus/StartPro-Launcher/releases)
 [![Stars](https://img.shields.io/github/stars/ACMagnus/StartPro-Launcher?style=flat-square&color=ffb000&label=stars)](https://github.com/ACMagnus/StartPro-Launcher/stargazers)
