@@ -60,6 +60,7 @@ StartPro Launcher（SPL）不是只画了一层启动器外壳。它的下载、
 | --- | --- |
 | [StartPro-Launcher-1.2.1-bat.zip](https://github.com/ACMagnus/StartPro-Launcher/releases/download/v1.2.1/StartPro-Launcher-1.2.1-bat.zip) | Windows 完整包，约 100 MB，内置 Electron，**不需要 Node.js** |
 | [StartPro-Launcher-1.2.1-source.zip](https://github.com/ACMagnus/StartPro-Launcher/releases/download/v1.2.1/StartPro-Launcher-1.2.1-source.zip) | 源码包；仓库 [`source/`](source/) 目录同样保留完整源码 |
+| [SHA256SUMS.txt](https://github.com/ACMagnus/StartPro-Launcher/releases/download/v1.2.1/SHA256SUMS.txt) | 两个包的 SHA-256 校验值 |
 | [官网](https://acmagnus.github.io/StartPro-Launcher/) | 在线介绍与下载页 |
 
 ### 快速开始
@@ -68,6 +69,8 @@ StartPro Launcher（SPL）不是只画了一层启动器外壳。它的下载、
 2. 双击 `start.bat`，或直接双击 `StartPro Launcher.exe`。
 3. 首次启动会创建配置目录 `%APPDATA%\StartPro Launcher`，不会接管你现有的 `.minecraft`。
 4. 在「设置 → 游戏 → 游戏目录」切换到自己的 `.minecraft`，或直接安装一个新版本。
+
+下载后可用 `certutil -hashfile StartPro-Launcher-1.2.1-bat.zip SHA256` 对照 [SHA256SUMS.txt](https://github.com/ACMagnus/StartPro-Launcher/releases/download/v1.2.1/SHA256SUMS.txt)。
 
 ## 内置 AI 怎么用
 
