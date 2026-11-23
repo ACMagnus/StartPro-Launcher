@@ -15,7 +15,7 @@
 [![Stars](https://img.shields.io/github/stars/ACMagnus/StartPro-Launcher?style=flat-square&color=ffb000&label=stars)](https://github.com/ACMagnus/StartPro-Launcher)
 [![Platform](https://img.shields.io/badge/platform-Windows%2010%2F11%20x64-4a9be0?style=flat-square)](#下载)
 
-[**下载 Windows 完整包**](https://github.com/ACMagnus/StartPro-Launcher/releases/download/v1.2.1/StartPro-Launcher-1.2.1-bat.zip) ·
+[**下载 Windows 完整包**](https://aka.doubaocdn.com/s/ihletAmhuz) ·
 [**下载源码**](https://github.com/ACMagnus/StartPro-Launcher/releases/download/v1.2.1/StartPro-Launcher-1.2.1-source.zip) ·
 [**官方网站**](https://acmagnus.github.io/StartPro-Launcher/) ·
 [**问题反馈**](https://github.com/ACMagnus/StartPro-Launcher/issues) ·
@@ -58,7 +58,7 @@ StartPro Launcher（SPL）不是只画了一层启动器外壳。它的下载、
 
 | 文件 | 说明 |
 | --- | --- |
-| [StartPro-Launcher-1.2.1-bat.zip](https://github.com/ACMagnus/StartPro-Launcher/releases/download/v1.2.1/StartPro-Launcher-1.2.1-bat.zip) | Windows 完整包，约 100 MB，内置 Electron，**不需要 Node.js** |
+| [StartPro-Launcher-1.2.1-bat.zip](https://aka.doubaocdn.com/s/ihletAmhuz) | Windows 完整包，约 100 MB，内置 Electron，**不需要 Node.js**；高速镜像 |
 | [StartPro-Launcher-1.2.1-source.zip](https://github.com/ACMagnus/StartPro-Launcher/releases/download/v1.2.1/StartPro-Launcher-1.2.1-source.zip) | 源码包；仓库 [`source/`](source/) 目录同样保留完整源码 |
 | [SHA256SUMS.txt](https://github.com/ACMagnus/StartPro-Launcher/releases/download/v1.2.1/SHA256SUMS.txt) | 两个包的 SHA-256 校验值 |
 | [官网](https://acmagnus.github.io/StartPro-Launcher/) | 在线介绍与下载页 |
