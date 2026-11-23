@@ -1,7 +1,7 @@
 {
-  "version": "1.2.0",
-  "notes": "内置 AI 接入在线模型：支持 DeepSeek、OpenAI、Ollama 本地和任意 OpenAI 兼容接口，小助手结合版本、Java、设置和最近日志回答；未配置或失败自动回退离线知识库。自动更新继续可用。作者：竹下一刀魂。",
-  "url": "https://github.com/ACMagnus/StartPro-Launcher/releases/download/v1.2.0/StartPro-Launcher-1.2.0-bat.zip",
-  "sha256": "887a56ffaf641ea67b7e405969be31c36f2d34cdf2a2dec25ded3c4cf6c36ea4",
+  "version": "1.2.1",
+  "notes": "修复自动更新在非首页或弹窗打开时永久跳过；AI 回复改为流式逐字显示，启动时预加载版本信息，设置页修改 AI/Java/内存不再重复加载背景、皮肤和音乐。1.2.0 的在线 AI 能力保留。作者：竹下一刀魂。",
+  "url": "https://github.com/ACMagnus/StartPro-Launcher/releases/download/v1.2.1/StartPro-Launcher-1.2.1-bat.zip",
+  "sha256": "ba798c1fab653980c7030eebaef35e834d97aef0849d3ccf13280aa23826d3c6",
   "publishedAt": "2026-11-23"
 }
