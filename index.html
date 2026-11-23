@@ -291,7 +291,7 @@ html.js [data-reveal].on{opacity:1;transform:none}
       <a href="#download">下载</a>
       <a href="#log">更新日志</a>
       <a href="https://github.com/ACMagnus/StartPro-Launcher" target="_blank" rel="noopener">GitHub</a>
-      <a class="nav-cta" href="#download">下载 1.1.8</a>
+      <a class="nav-cta" href="#download">下载 1.1.9</a>
     </nav>
     <button class="menu-btn" id="menuBtn" aria-label="打开导航">☰</button>
   </div>
@@ -301,12 +301,12 @@ html.js [data-reveal].on{opacity:1;transform:none}
   <section class="hero">
     <div class="wrap hero-grid">
       <div class="hero-copy">
-        <span class="eyebrow"><span class="dot"></span> StartPro Launcher · 1.1.8 已发布</span>
+        <span class="eyebrow"><span class="dot"></span> StartPro Launcher · 1.1.9 已发布</span>
         <h1>把 Minecraft<br><span class="grad">启动得更漂亮。</span></h1>
         <p class="lede">一个真正能下载、能安装、能启动的 Minecraft 启动器。原版、Forge、NeoForge、Fabric、Quilt、OptiFine，一个入口全部搞定。</p>
         <p class="sub">不只是 PCL2 风格的外壳：底层接入真实的 Mojang / BMCLAPI 下载与启动流程，版本、依赖、资源、Java 全部落地到本机。</p>
         <div class="hero-actions">
-          <a class="btn primary" href="https://github.com/ACMagnus/StartPro-Launcher/releases/download/v1.1.8/StartPro-Launcher-1.1.8-bat.zip" target="_blank" rel="noopener">下载 Windows 版 <span>↓</span></a>
+          <a class="btn primary" href="https://github.com/ACMagnus/StartPro-Launcher/releases/download/v1.1.9/StartPro-Launcher-1.1.9-bat.zip" target="_blank" rel="noopener">下载 Windows 版 <span>↓</span></a>
           <a class="btn ghost" href="#features">了解功能</a>
         </div>
         <div class="hero-meta">
@@ -323,7 +323,7 @@ html.js [data-reveal].on{opacity:1;transform:none}
         <div class="shot-caption">REAL UI · 首次启动</div>
         <div class="float-card a">
           <div class="mini">1.1</div>
-          <div><strong>1.1.8 构建</strong><small>Bugfix / 启动修复</small></div>
+          <div><strong>1.1.9 构建</strong><small>自动更新 / 作者署名</small></div>
         </div>
         <div class="float-card b">
           <div class="mini">SPL</div>
@@ -357,7 +357,7 @@ html.js [data-reveal].on{opacity:1;transform:none}
         <article class="f-card"><span class="f-num">03</span><h3>整合包</h3><p>导入导出 .mrpack，也能解包 CurseForge 整合包；自动把 Mod、资源包、光影包放回对应目录。</p><div class="f-tags"><span>MRPACK</span><span>IMPORT</span><span>EXPORT</span></div></article>
         <article class="f-card"><span class="f-num">04</span><h3>账号与 Java</h3><p>支持微软正版登录与离线账号；自动检测 Java，也可以在设置里下载安装 Temurin 8 / 17 / 21。</p><div class="f-tags"><span>MICROSOFT</span><span>OFFLINE</span><span>JAVA</span></div></article>
         <article class="f-card"><span class="f-num">05</span><h3>启动与诊断</h3><p>构建真实 JVM 参数，输出启动阶段进度；崩溃后读取日志，给出内存、Mod、Java 版本等可操作的原因。</p><div class="f-tags"><span>LAUNCH</span><span>CRASH</span></div></article>
-        <article class="f-card"><span class="f-num">06</span><h3>更新与校验</h3><p>检查更新清单、下载安装包并做 SHA-256 校验；下载文件走临时文件与断点续传，失败自动重试。</p><div class="f-tags"><span>UPDATE</span><span>SHA-256</span></div></article>
+        <article class="f-card"><span class="f-num">06</span><h3>自动更新</h3><p>启动后自动检查更新清单，一键下载并校验 SHA-256；退出旧进程后自动替换程序文件并重新打开，配置与存档不受影响。</p><div class="f-tags"><span>UPDATE</span><span>SHA-256</span></div></article>
         <article class="f-card"><span class="f-num">07</span><h3>本地优先</h3><p>账号、设置、背景、音乐和皮肤都保存在本机配置目录；没有账号上传，没有强制登录，也没有广告。</p><div class="f-tags"><span>LOCAL</span><span>PRIVATE</span></div></article>
         <article class="f-card"><span class="f-num">08</span><h3>SPL 小助手</h3><p>内置离线知识库，结合当前启动器状态回答安装、Java、Mod、登录与报错问题；不联网、不调用大模型。</p><div class="f-tags"><span>OFFLINE</span><span>ASSISTANT</span></div></article>
       </div>
@@ -386,7 +386,7 @@ html.js [data-reveal].on{opacity:1;transform:none}
           <div class="flow-step"><b>04</b><strong>安装加载器</strong><em>Forge / NeoForge / Fabric</em></div>
           <div class="flow-step"><b>05</b><strong>构建 JVM 参数</strong><em>Java / 内存 / 窗口</em></div>
           <div class="flow-step"><b>06</b><strong>启动游戏</strong><em class="ok">PROCESS READY</em></div>
-          <div class="flow-note"><span><b>1.1.8</b> · 启动链路修复</span><span>REAL PIPELINE</span></div>
+          <div class="flow-note"><span><b>1.1.9</b> · 自动更新已接入</span><span>REAL PIPELINE</span></div>
         </div>
       </div>
     </div>
@@ -415,19 +415,19 @@ html.js [data-reveal].on{opacity:1;transform:none}
       <div class="download-card" data-reveal>
         <div class="dl-grid">
           <div class="dl-main">
-            <span class="dl-pill">LATEST RELEASE · 1.1.8</span>
+            <span class="dl-pill">LATEST RELEASE · 1.1.9</span>
             <h2>下载 StartPro Launcher</h2>
             <p>Windows 10 / 11 x64 完整包，解压后双击 <b>start.bat</b> 即可运行。自带 Electron 运行时，不需要另装 Node.js。</p>
             <div class="dl-actions">
-              <a class="btn primary" href="https://github.com/ACMagnus/StartPro-Launcher/releases/download/v1.1.8/StartPro-Launcher-1.1.8-bat.zip" target="_blank" rel="noopener">下载 Windows 版 <span>↓</span></a>
-              <a class="btn ghost" href="https://github.com/ACMagnus/StartPro-Launcher/releases/download/v1.1.8/StartPro-Launcher-1.1.8-source.zip" target="_blank" rel="noopener">下载源码</a>
+              <a class="btn primary" href="https://github.com/ACMagnus/StartPro-Launcher/releases/download/v1.1.9/StartPro-Launcher-1.1.9-bat.zip" target="_blank" rel="noopener">下载 Windows 版 <span>↓</span></a>
+              <a class="btn ghost" href="https://github.com/ACMagnus/StartPro-Launcher/releases/download/v1.1.9/StartPro-Launcher-1.1.9-source.zip" target="_blank" rel="noopener">下载源码</a>
             </div>
             <div class="dl-file">
-              <div class="name"><b>StartPro-Launcher-1.1.8-bat.zip</b><span>约 100 MB · Windows x64 · 含 start.bat</span></div>
-              <div class="name" style="text-align:right"><b>v1.1.8</b><span>2026.11 · 稳定构建</span></div>
+              <div class="name"><b>StartPro-Launcher-1.1.9-bat.zip</b><span>约 100 MB · Windows x64 · 含 start.bat</span></div>
+              <div class="name" style="text-align:right"><b>v1.1.9</b><span>2026.11 · 稳定构建</span></div>
             </div>
-            <div class="hash-row"><code>SHA-256 · 6f27f51ad7ddd207951b30818d63c4439de9c4bced93c67ab7f5817bde476e97</code><button data-copy="6f27f51ad7ddd207951b30818d63c4439de9c4bced93c67ab7f5817bde476e97">复制</button></div>
-            <div class="hash-row"><code>源码 SHA-256 · 98819714c06cc75054bb4de39a9b3634122ced49c6f3d6d1a66c1affc95d1025</code><button data-copy="98819714c06cc75054bb4de39a9b3634122ced49c6f3d6d1a66c1affc95d1025">复制</button></div>
+            <div class="hash-row"><code>SHA-256 · 6032d32615efeea3d4b1af3607db2624febc5aac3d3ca314cd57b96c61a5b3cd</code><button data-copy="6032d32615efeea3d4b1af3607db2624febc5aac3d3ca314cd57b96c61a5b3cd">复制</button></div>
+            <div class="hash-row"><code>源码 SHA-256 · 19262e2b19745ad69e91ed8c1ff68d0c490adb4bbb4c212f041dc8049b318b94</code><button data-copy="19262e2b19745ad69e91ed8c1ff68d0c490adb4bbb4c212f041dc8049b318b94">复制</button></div>
           </div>
           <aside class="dl-side">
             <h3>安装只要三步</h3>
@@ -462,7 +462,17 @@ html.js [data-reveal].on{opacity:1;transform:none}
       </div>
       <div class="log-grid" data-reveal>
         <article class="log-card current">
-          <div class="log-top"><b>1.1.8</b><span>当前版本</span></div>
+          <div class="log-top"><b>1.1.9</b><span>当前版本</span></div>
+          <p>加入启动器自动更新，并更新作者署名。</p>
+          <ul>
+            <li><i>·</i><span>启动 5 秒后自动检查 update.json，手动入口保留</span></li>
+            <li><i>·</i><span>一键下载、SHA-256 校验、退出替换并自动重启</span></li>
+            <li><i>·</i><span>只替换程序目录，不碰配置和游戏存档</span></li>
+            <li><i>·</i><span>作者署名更新为「竹下一刀魂」</span></li>
+          </ul>
+        </article>
+        <article class="log-card">
+          <div class="log-top"><b>1.1.8</b><span>启动修复</span></div>
           <p>修复启动竞态、配置空值与完整包入口。</p>
           <ul>
             <li><i>·</i><span>背景 / 皮肤异步加载增加竞态守卫</span></li>
@@ -524,7 +534,7 @@ html.js [data-reveal].on{opacity:1;transform:none}
         <details><summary>为什么 Windows 提示“未知发布者”？<span class="plus">+</span></summary><p>当前构建没有购买商业代码签名证书。请先核对页面上的 SHA-256，确认文件一致后，在 SmartScreen 中选择“更多信息 → 仍要运行”。</p></details>
         <details><summary>支持正版账号和离线账号吗？<span class="plus">+</span></summary><p>支持微软正版登录，也支持离线账号。离线账号只适合本地单人游戏；账号信息保存在本机配置目录，不会上传到第三方服务器。</p></details>
         <details><summary>下载慢怎么办？<span class="plus">+</span></summary><p>1.1.3 起，客户端 jar 和大型依赖库会按 Range 分 4–8 段并发下载，依赖库与资源文件也提高了并发。实际速度仍取决于你的宽带和当前镜像源；可以在“设置 → 启动器”切换下载源后重试。</p></details>
-        <details><summary>能自动更新吗？<span class="plus">+</span></summary><p>可以检查更新、下载新包并做 SHA-256 校验；但不会替换正在运行的程序。下载完成后请关闭启动器，手动解压覆盖，或按提示替换。</p></details>
+        <details><summary>能自动更新吗？<span class="plus">+</span></summary><p>可以。Windows 完整包启动约 5 秒后自动检查更新；点“立即更新并重启”会下载完整包、校验 SHA-256，退出旧进程后替换程序文件并重新打开。更新只替换程序目录，不碰 %APPDATA% 里的配置和存档。也可以在“更多 → 检查更新”手动触发。</p></details>
         <details><summary>支持 macOS / Linux 吗？<span class="plus">+</span></summary><p>当前官方构建只提供 Windows x64 包。源码可以在其他平台自行安装依赖并运行，但尚未提供官方 macOS / Linux 安装包。</p></details>
         <details><summary>和 Mojang / PCL2 官方是什么关系？<span class="plus">+</span></summary><p>StartPro Launcher 是独立项目，与 Mojang Studios、Microsoft 及 PCL2 作者没有关联，也不包含 PCL2 的代码或素材。Minecraft 是 Mojang Studios 的商标，请使用正版游戏。</p></details>
       </div>
@@ -549,7 +559,7 @@ html.js [data-reveal].on{opacity:1;transform:none}
     </div>
     <div class="foot-bottom">
       <p>本站由 GitHub Pages 托管。StartPro Launcher 与 Mojang Studios、Microsoft 及 PCL2 官方无关联；Minecraft 是 Mojang Studios 的商标，请使用正版游戏。</p>
-      <div class="right">© <span id="year">2026</span> StartPro Project<br>Built for Minecraft.</div>
+      <div class="right">© <span id="year">2026</span> 竹下一刀魂<br>Built for Minecraft.</div>
     </div>
   </div>
 </footer>

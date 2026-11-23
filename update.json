@@ -1,0 +1,7 @@
+{
+  "version": "1.1.9",
+  "notes": "加入启动器自动更新：启动后自动检查新版本，一键下载、SHA-256 校验，退出旧进程后替换并重启。作者：竹下一刀魂。",
+  "url": "https://github.com/ACMagnus/StartPro-Launcher/releases/download/v1.1.9/StartPro-Launcher-1.1.9-bat.zip",
+  "sha256": "6032d32615efeea3d4b1af3607db2624febc5aac3d3ca314cd57b96c61a5b3cd",
+  "publishedAt": "2026-11-23"
+}
