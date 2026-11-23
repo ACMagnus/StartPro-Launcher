@@ -1,0 +1,72 @@
+StartPro Launcher（SPL）运行说明
+========================
+
+作者：竹下一刀魂
+
+本文针对「源码包」；源码包不是打包好的 exe，第一次运行需要 Node.js。
+普通用户请下载「完整 Windows 包」，解压后双击 start.bat 即可，内置 Electron，不需要 Node.js、npm 或联网拉依赖。
+
+一、完整 Windows 包（推荐普通用户）
+1. 解压 StartPro-Launcher-1.2.1-bat.zip。
+2. 双击文件夹里的 start.bat（或直接双击 StartPro Launcher.exe）。
+3. 首次成功启动后，桌面会自动生成「StartPro Launcher」快捷方式；以后直接双击桌面图标即可。
+
+二、源码包（开发/自行构建）
+1. 解压 StartPro-Launcher-1.2.1-source.zip。
+2. 安装 Node.js LTS：https://nodejs.org/ （一路下一步即可）。
+3. 进入解压后的 StartPro Launcher 文件夹，双击 start.bat。
+4. 第一次会自动执行 npm install 下载 Electron（约 100 MB），之后会自动打开启动器。
+   首次成功启动后，桌面会自动生成「StartPro Launcher」快捷方式；以后直接双击桌面图标即可。
+
+三、命令行方式
+在 PowerShell 中执行：
+  cd C:\你的路径\StartPro Launcher
+  npm install
+  npm start
+
+四、安装报错怎么办
+- 出现 ECONNRESET / electron install.js failed：这是 Electron 运行时下载被重置。
+  新版 start.bat 已自动切到 npmmirror 镜像，直接重新运行即可。
+- 如果仍然失败：关闭窗口，删除 node_modules 文件夹，把整个项目移动到
+  C:\StartPro 这类本地短路径（不要放在 Downloads 或 OneDrive 同步目录），
+  再运行 start.bat。
+- npm 报 EPERM: operation not permitted：通常是杀毒软件正在扫描或文件夹被占用，
+  关闭占用后重试；必要时把项目移到 C:\StartPro 再试。
+
+五、下载页“版本列表获取失败”怎么办
+- 启动器会自动尝试官方源和 BMCLAPI，Forge / NeoForge 列表优先走 BMCLAPI；一般不需要手动改设置。
+- 错误卡片上可以直接点“重新获取”；Forge / NeoForge 下拉框旁也有“重新获取”按钮。
+- 如果一直失败，先关闭系统代理、VPN 或下载加速器，再重启启动器；公司/校园网需要放行
+  launchermeta.mojang.com、bmclapi2.bangbang93.com、maven.minecraftforge.net。
+
+六、常见问题
+- 双击后窗口一闪而过：右键 start.bat → 以管理员身份运行，或在 PowerShell 里执行看报错。
+- npm install 卡住：国内网络可先执行
+    npm config set registry https://registry.npmmirror.com
+  然后再运行 start.bat。
+- 提示找不到 npm：Node.js 没装好，重新安装 LTS 版并重启终端。
+- 首次启动会创建配置目录：%APPDATA%\StartPro Launcher
+
+
+七、自动更新
+- 完整 Windows 包默认在启动 5 秒后检查官方 update.json；发现新版本会弹出更新窗口。
+- 点“立即更新并重启”后，启动器会下载完整包、校验 SHA-256，退出并自动替换程序文件，然后重新打开。
+- 更新只替换程序目录，不碰 %APPDATA%\StartPro Launcher 里的配置和游戏目录；更新过程中不要手动结束进程。
+- 如果程序放在 Program Files 等不可写目录，自动更新会提示目录不可写；请换到 D:\StartPro 这类目录后重试。
+
+
+八、内置 AI
+- 入口：设置 → 启动器 → 内置 AI；也可以在小助手窗口点“AI 设置”。
+- 未配置时，小助手使用离线知识库，不联网、不上传对话。
+- 想让它更聪明：选择接口预设（DeepSeek / OpenAI / Ollama 本地 / 自定义），填写 Base URL、API Key 和模型，点“测试连接”。
+- DeepSeek：https://api.deepseek.com/v1，模型 deepseek-chat；OpenAI：https://api.openai.com/v1，模型 gpt-4o-mini。
+- 完全本地：安装 Ollama 后选“Ollama 本地”，地址 http://127.0.0.1:11434/v1，模型填 qwen2.5:7b 或已拉取的模型名，不需要 API Key。
+- API Key 只保存在本机配置 %APPDATA%\StartPro Launcher\config.json，不会上传到 StartPro 服务器；提问时会把问题、启动器状态和最近 20 行日志发送到你填写的 AI 接口。
+- 在线回复会逐字显示；中途失败会保留已经生成的内容，并在末尾标注中断原因，不会整段消失。
+- 在线 AI 完全失败时自动回退到本地知识库，不会让助手直接“罢工”。
+
+v1.0.3 补充：
+1. 微软正版登录需要先在“设置 → 启动器”填写 Azure Client ID（类型选“移动和桌面应用程序”并允许公共客户端流）。
+2. 外置登录账号需要填写完整验证服务器地址；启动器会自动下载 authlib-injector 并注入，首次启动需联网。
+3. Forge/NeoForge 安装日志已改为批量刷新；安装较慢时请等待，不要重复点击。
+4. 若 Mod 搜索无结果且当前版本是快照，请切换到正式版（如 1.21.x）再搜索。

@@ -1,0 +1,86 @@
+/* ---------------- SPL 小助手 ---------------- */
+.ai-fab {
+  position: fixed; right: 18px; bottom: 96px; z-index: 46;
+  display: flex; align-items: center; gap: 7px; height: 38px; padding: 0 13px 0 7px;
+  border: 1px solid #cfe3f7; border-radius: 20px; cursor: pointer;
+  background: linear-gradient(180deg,#fff,#f3f9ff); color: #2b6ca8;
+  box-shadow: 0 6px 18px rgba(47,111,176,.18); font: 12px/1 "Microsoft YaHei",sans-serif;
+  transition: transform .16s, box-shadow .16s;
+}
+.ai-fab:hover { transform: translateY(-2px); box-shadow: 0 9px 22px rgba(47,111,176,.25); }
+.ai-fab-ico {
+  width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center;
+  background: linear-gradient(135deg,#4c9be8,#2f6fb0); color: #fff; font: 700 8px/1 "Microsoft YaHei",sans-serif;
+  letter-spacing: .2px;
+}
+.ai-fab i { width: 6px; height: 6px; border-radius: 50%; background: #45c46a; box-shadow: 0 0 0 2px #e5f8ea; }
+.ai-fab span:not(.ai-fab-ico) { font-weight: 600; }
+
+.ai-shell { display: flex; flex-direction: column; gap: 8px; }
+.ai-status {
+  display: flex; align-items: center; gap: 6px; font-size: 11px; color: #7089a0;
+  background: #f4f9ff; border: 1px solid #e3effb; border-radius: 6px; padding: 6px 9px;
+}
+.ai-pulse { width: 6px; height: 6px; border-radius: 50%; background: #45c46a; box-shadow: 0 0 0 2px #e5f8ea; flex: 0 0 auto; }
+.ai-status-right { margin-left: auto; color: #9aabbd; font-size: 10.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ai-chat {
+  height: 340px; overflow-y: auto; padding: 10px 12px;
+  background: linear-gradient(180deg,#fbfdff,#f7fbff); border: 1px solid #e4eef9; border-radius: 7px;
+}
+.ai-chat::-webkit-scrollbar { width: 6px; }
+.ai-chat::-webkit-scrollbar-thumb { background: #d5e5f4; border-radius: 3px; }
+.ai-row { display: flex; gap: 7px; margin: 0 0 11px; align-items: flex-start; }
+.ai-row.user { justify-content: flex-end; }
+.ai-avatar {
+  width: 24px; height: 24px; border-radius: 50%; flex: 0 0 auto; display: grid; place-items: center;
+  background: linear-gradient(135deg,#4c9be8,#2f6fb0); color: #fff; font: 700 8px/1 "Microsoft YaHei",sans-serif;
+  margin-top: 1px;
+}
+.ai-bubble { max-width: 84%; border-radius: 7px; padding: 8px 10px; font-size: 12.5px; line-height: 1.72; }
+.ai-bubble.bot { background: #fff; border: 1px solid #e2edf8; color: #2c4257; box-shadow: 0 1px 2px rgba(37,85,128,.04); }
+.ai-bubble.user { background: #2f6fb0; color: #fff; border: 1px solid #2f6fb0; }
+.ai-text { white-space: pre-wrap; word-break: break-word; user-select: text; }
+.ai-text .ai-h { color: var(--text); font-weight: 700; margin: 6px 0 2px; }
+.ai-text .ai-code { background: rgba(0,0,0,.28); border: 1px solid var(--line); border-radius: 6px; padding: 8px 10px; margin: 6px 0; white-space: pre-wrap; font-family: ui-monospace, Consolas, monospace; font-size: 11px; line-height: 1.6; }
+.ai-text .ai-inline { background: rgba(0,0,0,.22); border-radius: 3px; padding: 0 4px; font-family: ui-monospace, Consolas, monospace; font-size: 11px; }
+.ai-actions { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; padding-top: 7px; border-top: 1px dashed #e8f1fa; }
+.ai-act {
+  height: 25px; padding: 0 9px; border-radius: 5px; border: 1px solid #cfe3f7; background: #f4faff;
+  color: #2b6ca8; font: 11.5px/1 "Microsoft YaHei",sans-serif; cursor: pointer;
+}
+.ai-act:hover { background: #e8f4ff; border-color: #a9cdf0; }
+.ai-typing { display: flex; gap: 4px; align-items: center; height: 18px; }
+.ai-typing i { width: 5px; height: 5px; border-radius: 50%; background: #8fb8da; animation: ai-blink 1.1s infinite; }
+.ai-typing i:nth-child(2) { animation-delay: .18s; }
+.ai-typing i:nth-child(3) { animation-delay: .36s; }
+@keyframes ai-blink { 0%,80%,100% { opacity: .25; transform: translateY(0); } 40% { opacity: 1; transform: translateY(-2px); } }
+.ai-suggest { display: flex; flex-wrap: wrap; gap: 6px; }
+.ai-chip {
+  height: 26px; padding: 0 9px; border-radius: 6px; border: 1px solid #dcebf9; background: #fff;
+  color: #52789a; font: 11px/1 "Microsoft YaHei",sans-serif; cursor: pointer;
+}
+.ai-chip:hover { background: #f2f9ff; border-color: #b9d8f2; color: #2b6ca8; }
+.ai-input { display: flex; gap: 8px; }
+.ai-input input {
+  flex: 1; height: 34px; border: 1px solid #cfe2f3; border-radius: 6px; padding: 0 10px;
+  font: 12.5px/1 "Microsoft YaHei",sans-serif; color: #2c4257; outline: none; background: #fff;
+}
+.ai-input input:focus { border-color: #7fb6e5; box-shadow: 0 0 0 2px rgba(88,158,216,.14); }
+.ai-input .btn { height: 34px; min-width: 64px; }
+
+/* 更多页入口横幅 */
+.ai-banner {
+  display: flex; align-items: center; gap: 11px; margin: 10px 14px 4px; padding: 10px 12px;
+  border: 1px solid #d8eafa; border-radius: 7px;
+  background: linear-gradient(100deg,#f5fbff,#eef7ff 55%,#f8fcff);
+}
+.ai-banner-ico {
+  width: 32px; height: 32px; border-radius: 50%; flex: 0 0 auto; display: grid; place-items: center;
+  background: linear-gradient(135deg,#4c9be8,#2f6fb0); color: #fff; font: 700 10px/1 "Microsoft YaHei",sans-serif;
+  box-shadow: 0 2px 6px rgba(47,111,176,.22);
+}
+.ai-banner-main { min-width: 0; }
+.ai-banner-title { font-size: 12.5px; font-weight: 700; color: #24537d; display: flex; align-items: center; gap: 6px; }
+.ai-banner-title em { font-style: normal; font-size: 9.5px; font-weight: 400; color: #4e8f5c; background: #e9f8ee; border: 1px solid #d4efdc; border-radius: 3px; padding: 1px 4px; }
+.ai-banner-sub { font-size: 10.5px; color: #7d95aa; margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ai-banner .btn { margin-left: auto; flex: 0 0 auto; height: 28px; font-size: 11.5px; }

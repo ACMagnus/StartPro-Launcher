@@ -1,0 +1,59 @@
+/* ---------------- 全面检查 ---------------- */
+.dg-shell { display: flex; flex-direction: column; gap: 10px; }
+.dg-hero {
+  display: flex; align-items: center; gap: 14px; padding: 14px 16px; border-radius: 8px;
+  border: 1px solid #dcebf9; background: linear-gradient(100deg,#f4fbff,#eef7ff);
+}
+.dg-hero.warn { border-color: #f0dfba; background: linear-gradient(100deg,#fffaf0,#fff6e6); }
+.dg-hero.fail { border-color: #f0cfcf; background: linear-gradient(100deg,#fff6f6,#fff0f0); }
+.dg-score { font: 700 34px/1 "Microsoft YaHei",sans-serif; color: #2f6fb0; min-width: 66px; text-align: center; }
+.dg-hero.warn .dg-score { color: #b57a1d; }
+.dg-hero.fail .dg-score { color: #c04747; }
+.dg-score small { font-size: 12px; font-weight: 400; color: #9aabbd; }
+.dg-hero-main { min-width: 0; }
+.dg-hero-title { font-size: 14px; font-weight: 700; color: #24537d; }
+.dg-hero-sub { font-size: 11px; color: #7b93aa; margin-top: 4px; line-height: 1.6; }
+.dg-counts { display: flex; gap: 10px; margin-left: auto; flex: 0 0 auto; }
+.dg-count { text-align: center; font-size: 10px; color: #8699ac; }
+.dg-count b { display: block; font-size: 18px; line-height: 1.1; color: #2f6fb0; }
+.dg-count.warn b { color: #b57a1d; }
+.dg-count.fail b { color: #c04747; }
+.dg-body { max-height: 400px; overflow-y: auto; padding-right: 4px; }
+.dg-body::-webkit-scrollbar { width: 6px; }
+.dg-body::-webkit-scrollbar-thumb { background: #d5e5f4; border-radius: 3px; }
+.dg-group-title {
+  display: flex; align-items: center; gap: 7px; margin: 12px 0 6px; font-size: 11px;
+  color: #6f8aa2; letter-spacing: .5px; text-transform: uppercase;
+}
+.dg-group-title::after { content: ""; flex: 1; height: 1px; background: #e7f0f9; }
+.dg-row {
+  display: flex; gap: 9px; align-items: flex-start; padding: 8px 9px; border-radius: 6px;
+  border: 1px solid transparent; background: #fbfdff;
+}
+.dg-row + .dg-row { margin-top: 5px; }
+.dg-row:hover { border-color: #e1edf9; background: #f7fbff; }
+.dg-dot {
+  width: 17px; height: 17px; border-radius: 50%; flex: 0 0 auto; display: grid; place-items: center;
+  font: 700 10px/1 "Microsoft YaHei",sans-serif; margin-top: 1px;
+}
+.dg-dot.pass { color: #2f8f4e; background: #e9f8ee; border: 1px solid #ccebd6; }
+.dg-dot.warn { color: #a8741c; background: #fff6e3; border: 1px solid #f0dfba; }
+.dg-dot.fail { color: #b83d3d; background: #fff0f0; border: 1px solid #f0cfcf; }
+.dg-dot.info { color: #4b7fa8; background: #eef7ff; border: 1px solid #d8eafa; }
+.dg-main { min-width: 0; flex: 1; }
+.dg-title { font-size: 12px; font-weight: 700; color: #2c4257; }
+.dg-detail { font-size: 11px; color: #7089a0; line-height: 1.65; margin-top: 2px; word-break: break-all; }
+.dg-fix {
+  flex: 0 0 auto; height: 25px; padding: 0 9px; border-radius: 5px; border: 1px solid #cfe3f7;
+  background: #f4faff; color: #2b6ca8; font: 11px/1 "Microsoft YaHei",sans-serif; cursor: pointer; margin-top: 2px;
+}
+.dg-fix:hover { background: #e8f4ff; border-color: #a9cdf0; }
+.dg-footer { display: flex; align-items: center; gap: 8px; }
+.dg-footer .dg-time { font-size: 10px; color: #9aabbd; margin-right: auto; }
+.dg-loading { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 260px; gap: 13px; color: #7089a0; font-size: 12px; }
+.dg-spinner { width: 30px; height: 30px; border-radius: 50%; border: 3px solid #e1effb; border-top-color: #4c9be8; animation: dgspin .8s linear infinite; }
+.dg-steps { font-size: 10.5px; color: #9aabbd; }
+@keyframes dgspin { to { transform: rotate(360deg); } }
+
+.more-tile.diagnose { border-color: #cfe3f7; background: linear-gradient(100deg,#f7fcff,#eff8ff); }
+.more-tile.diagnose .mt-icon { color: #2f6fb0; background: #e7f2fd; }

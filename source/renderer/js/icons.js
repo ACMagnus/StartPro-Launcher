@@ -1,0 +1,46 @@
+/* 内联 SVG 图标集（无需外链资源） */
+window.Icons = (() => {
+  const s = (path, extra = '') =>
+    `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" ${extra}>${path}</svg>`;
+
+  return {
+    play: s('<path d="M8 5.5l11 6.5-11 6.5z" fill="currentColor" stroke="none"/>'),
+    download: s('<path d="M12 4v10"/><path d="M7.5 10.5L12 15l4.5-4.5"/><path d="M4.5 18.5h15"/>'),
+    globe: s('<circle cx="12" cy="12" r="8"/><path d="M4 12h16"/><path d="M12 4c2.4 2.4 2.4 13.6 0 16"/><path d="M12 4c-2.4 2.4-2.4 13.6 0 16"/>'),
+    gear: s('<circle cx="12" cy="12" r="3.2"/><path d="M12 3.5v2.2M12 18.3v2.2M3.5 12h2.2M18.3 12h2.2M6 6l1.6 1.6M16.4 16.4L18 18M18 6l-1.6 1.6M7.6 16.4L6 18"/>'),
+    grid: s('<rect x="4" y="4" width="6.5" height="6.5" rx="1.2"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1.2"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1.2"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.2"/>'),
+    plus: s('<path d="M12 5v14M5 12h14"/>'),
+    folder: s('<path d="M4 7.5a2 2 0 012-2h3.2l2 2H20a2 2 0 012 2v7a2 2 0 01-2 2H6a2 2 0 01-2-2z"/>'),
+    trash: s('<path d="M4.5 7h15"/><path d="M9 7V5h6v2"/><path d="M6.5 7l1 12h9l1-12"/>'),
+    copy: s('<rect x="8.5" y="8.5" width="11" height="11" rx="2"/><path d="M5.5 15.5H4.2V14L15 3.2h1.3"/>'),
+    refresh: s('<path d="M19 11a7 7 0 10-2.4 5.3"/><path d="M19.5 5v6h-6"/>'),
+    check: s('<path d="M4.5 12.5l5 5 10-11"/>'),
+    close: s('<path d="M5.5 5.5l13 13M18.5 5.5l-13 13"/>'),
+    search: s('<circle cx="11" cy="11" r="6.5"/><path d="M16 16l4 4"/>'),
+    box: s('<path d="M12 3.2l8 4.2v9.2l-8 4.2-8-4.2V7.4z"/><path d="M4 7.4l8 4.3 8-4.3"/><path d="M12 11.7v9"/>'),
+    package: s('<rect x="4" y="6" width="16" height="13" rx="2"/><path d="M4 10h16"/><path d="M9 6V3.5h6V6"/>'),
+    image: s('<rect x="4" y="5" width="16" height="14" rx="2"/><circle cx="9" cy="10" r="1.6"/><path d="M4.8 17l4.6-4.6 3 3 2.6-2.6 4.2 4.2"/>'),
+    shader: s('<path d="M12 3v18"/><path d="M3 12h18"/><path d="M6.4 6.4l11.2 11.2"/><path d="M17.6 6.4l-11.2 11.2"/>'),
+    doc: s('<path d="M6 4h8l4 4v12H6z"/><path d="M14 4v4h4"/>'),
+    log: s('<rect x="4.5" y="4" width="15" height="16" rx="2"/><path d="M8 9h8M8 13h8M8 17h5"/>'),
+    alert: s('<path d="M12 3.5l8.5 16h-17z"/><path d="M12 9v4.5M12 16.8h.01"/>'),
+    link: s('<path d="M10 7.5H8a4.5 4.5 0 000 9h2"/><path d="M14 7.5h2a4.5 4.5 0 010 9h-2"/><path d="M8.5 12h7"/>'),
+    info: s('<circle cx="12" cy="12" r="8"/><path d="M12 8.2v.2M12 11v5"/>'),
+    cpu: s('<rect x="6" y="6" width="12" height="12" rx="2"/><path d="M9 2.5v3M15 2.5v3M9 18.5v3M15 18.5v3M2.5 9h3M2.5 15h3M18.5 9h3M18.5 15h3"/>'),
+    sliders: s('<path d="M5 7h14M5 12h14M5 17h14"/><circle cx="9" cy="7" r="2.1" fill="#fff"/><circle cx="15" cy="12" r="2.1" fill="#fff"/><circle cx="8" cy="17" r="2.1" fill="#fff"/>'),
+    user: s('<circle cx="12" cy="8.2" r="3.6"/><path d="M4.8 19.5c1.2-3.6 4-5.4 7.2-5.4s6 1.8 7.2 5.4"/>'),
+    star: s('<path d="M12 3.8l2.6 5.4 5.9.8-4.3 4.1 1 5.9-5.2-2.8-5.2 2.8 1-5.9L3.5 10l5.9-.8z"/>'),
+    help: s('<circle cx="12" cy="12" r="9"/><path d="M9.2 9a2.8 2.8 0 116 0c0 2-3 2.3-3 4"/><circle cx="12" cy="17.6" r="1"/>'),
+    leaf: s('<path d="M20 4C13 4 5 8 5 18C5 20 6 21 8 21C18 21 20 13 20 4Z"/><path d="M5 21C7 15 10 11 16 8"/>'),
+    brush: s('<path d="M14 4l6 6-8 8H6v-6z"/><path d="M6 18c0 2-1 3-3 4"/>'),
+    window: s('<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18"/><path d="M7 4v5M12 4v5"/>'),
+    wifi: s('<path d="M5 11a10 10 0 0114 0"/><path d="M8 14.5a6 6 0 018 0"/><circle cx="12" cy="18" r="1.4"/>'),
+    chevron: s('<path d="M9.5 6.5L15 12l-5.5 5.5"/>'),
+    mod: s('<rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><path d="M16.5 13v7M13 16.5h7"/>'),
+    power: s('<path d="M12 4v8"/><path d="M6.2 7.5a7.5 7.5 0 1011.6 0"/>'),
+    save: s('<path d="M5 4h11l3 3v13H5z"/><path d="M8.5 4v5h7V4"/><rect x="8.5" y="13" width="7" height="7"/>'),
+    wrench: s('<path d="M15.5 4.5a4.5 4.5 0 00-5.6 5.6L4.5 15.5l3 3 5.4-5.4a4.5 4.5 0 005.6-5.6l-2.6 2.6-2.4-2.4z"/>'),
+    clock: s('<circle cx="12" cy="12" r="8"/><path d="M12 7.5V12l3 2"/>'),
+    shield: s('<path d="M12 3.5l7 2.5v6c0 4-3 7-7 8.5-4-1.5-7-4.5-7-8.5v-6z"/>'),
+  };
+})();

@@ -34,6 +34,7 @@ StartPro Launcher（SPL）不是只画了一层启动器外壳。它的下载、
 - **自动更新**：启动后自动检查新版本，一键下载、SHA-256 校验、退出替换并重新打开；配置和存档不受影响。
 - **在线 AI**：小助手可接 DeepSeek、OpenAI、Ollama 或任意 OpenAI 兼容接口，回复流式逐字显示，并自动带上当前版本、Java、镜像和最近日志。
 - **本地优先**：账号、设置、皮肤和背景保存在本机；不登录也能用，不配置 AI 时对话完全离线。
+- **源码公开**：完整 Electron 源码就在 [`source/`](source/) 目录，`main.js`、`core/`、`renderer/` 都能直接阅读和构建。
 - **PCL2 风格界面**：主页、下载、版本、Mod、联机、设置、更多，操作习惯不用重新学。
 
 ## 界面
@@ -57,7 +58,7 @@ StartPro Launcher（SPL）不是只画了一层启动器外壳。它的下载、
 | 文件 | 说明 |
 | --- | --- |
 | [StartPro-Launcher-1.2.1-bat.zip](https://github.com/ACMagnus/StartPro-Launcher/releases/download/v1.2.1/StartPro-Launcher-1.2.1-bat.zip) | Windows 完整包，约 100 MB，内置 Electron，**不需要 Node.js** |
-| [StartPro-Launcher-1.2.1-source.zip](https://github.com/ACMagnus/StartPro-Launcher/releases/download/v1.2.1/StartPro-Launcher-1.2.1-source.zip) | 源码包，开发或自行构建使用 |
+| [StartPro-Launcher-1.2.1-source.zip](https://github.com/ACMagnus/StartPro-Launcher/releases/download/v1.2.1/StartPro-Launcher-1.2.1-source.zip) | 源码包；仓库 [`source/`](source/) 目录同样保留完整源码 |
 | [官网](https://acmagnus.github.io/StartPro-Launcher/) | 在线介绍与下载页 |
 
 ### 快速开始
@@ -94,9 +95,11 @@ StartPro Launcher（SPL）不是只画了一层启动器外壳。它的下载、
 
 ## 从源码运行
 
+仓库内已经保留完整源码，位于 [`source/`](source/)：
+
 ```bash
 git clone https://github.com/ACMagnus/StartPro-Launcher.git
-cd StartPro-Launcher
+cd StartPro-Launcher/source
 npm install
 npm start
 ```
@@ -107,21 +110,25 @@ npm start
 npm run dist
 ```
 
-源码包内也提供 `start.bat`：
+`source/start.bat` 的行为：
 - 完整包里有 `StartPro Launcher.exe` 时直接启动，不要求 Node.js。
-- 源码包没有 exe 时回退到 `npm install` + Electron。
+- 没有 exe 时回退到 `npm install` + Electron。
 
 ## 项目结构
 
 ```text
-core/                下载、启动、Java、加载器、Mod、更新、AI
-renderer/            原生 HTML/CSS/JS 界面
-  js/pages/          主页、下载、版本、联机、设置、更多
-  js/assistant.js    SPL 小助手：离线知识库 + 在线 AI
-  css/               主题与页面样式
-main.js              Electron 主进程与 IPC
-preload.js           contextBridge 安全桥接
-scripts/             自检、UI 冒烟、网页版构建
+index.html           官网首页，由 GitHub Pages 直接托管
+update.json          启动器自动更新清单
+screenshots/         README 与社交预览图
+source/              完整 Electron 源码
+  core/              下载、启动、Java、加载器、Mod、更新、AI
+  renderer/          原生 HTML/CSS/JS 界面
+    js/pages/        主页、下载、版本、联机、设置、更多
+    js/assistant.js  SPL 小助手：离线知识库 + 在线 AI
+    css/             主题与页面样式
+  main.js            Electron 主进程与 IPC
+  preload.js         contextBridge 安全桥接
+  scripts/           自检、UI 冒烟、网页版构建
 ```
 
 ## 常见问题

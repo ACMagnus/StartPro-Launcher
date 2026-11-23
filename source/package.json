@@ -1,0 +1,75 @@
+{
+  "name": "startpro-launcher",
+  "version": "1.2.1",
+  "description": "StartPro Launcher (SPL) - an Electron Minecraft launcher",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron . --dev",
+    "preview": "node scripts/preview-server.js",
+    "selftest": "node scripts/selftest.js",
+    "dist": "electron-builder",
+    "test:diagnostics": "node scripts/diagnostics-test.js",
+    "web": "node scripts/build-web.js"
+  },
+  "keywords": [
+    "minecraft",
+    "launcher",
+    "startpro",
+    "spl",
+    "electron"
+  ],
+  "license": "MIT",
+  "homepage": "https://acmagnus.github.io/StartPro-Launcher/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ACMagnus/StartPro-Launcher.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ACMagnus/StartPro-Launcher/issues"
+  },
+  "devDependencies": {
+    "electron": "^33.0.0"
+  },
+  "dependencies": {
+    "adm-zip": "^0.5.16"
+  },
+  "build": {
+    "appId": "com.startpro.launcher",
+    "productName": "StartPro Launcher",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "core/**/*",
+      "renderer/**/*",
+      "package.json"
+    ],
+    "win": {
+      "target": [
+        "portable",
+        "nsis"
+      ],
+      "artifactName": "StartPro-Launcher-${version}-win.${ext}",
+      "icon": "renderer/assets/icon.ico"
+    },
+    "mac": {
+      "target": [
+        "dmg"
+      ]
+    },
+    "linux": {
+      "target": [
+        "AppImage"
+      ]
+    },
+    "icon": "renderer/assets/icon.png",
+    "electronLanguages": [
+      "zh-CN",
+      "en-US"
+    ]
+  },
+  "author": "竹下一刀魂"
+}
