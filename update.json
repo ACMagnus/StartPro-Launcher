@@ -1,7 +1,7 @@
 {
-  "version": "1.1.9",
-  "notes": "加入启动器自动更新：启动后自动检查新版本，一键下载、SHA-256 校验，退出旧进程后替换并重启。作者：竹下一刀魂。",
-  "url": "https://github.com/ACMagnus/StartPro-Launcher/releases/download/v1.1.9/StartPro-Launcher-1.1.9-bat.zip",
-  "sha256": "6032d32615efeea3d4b1af3607db2624febc5aac3d3ca314cd57b96c61a5b3cd",
+  "version": "1.2.0",
+  "notes": "内置 AI 接入在线模型：支持 DeepSeek、OpenAI、Ollama 本地和任意 OpenAI 兼容接口，小助手结合版本、Java、设置和最近日志回答；未配置或失败自动回退离线知识库。自动更新继续可用。作者：竹下一刀魂。",
+  "url": "https://github.com/ACMagnus/StartPro-Launcher/releases/download/v1.2.0/StartPro-Launcher-1.2.0-bat.zip",
+  "sha256": "887a56ffaf641ea67b7e405969be31c36f2d34cdf2a2dec25ded3c4cf6c36ea4",
   "publishedAt": "2026-11-23"
 }
