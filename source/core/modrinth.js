@@ -14,7 +14,7 @@ const { installFabric } = require('./fabric');
 const { installForge, installNeoForge } = require('./forge');
 
 const API = 'https://api.modrinth.com/v2';
-const UA = 'StartPro/1.2.2';
+const UA = 'StartPro/1.2.3';
 
 async function api(pathname) {
   const res = await fetch(`${API}${pathname}`, {

@@ -2,7 +2,7 @@
 
 StartPro Launcher（简称 SPL）是以 Plain Craft Launcher 2（PCL2）界面为蓝本的开源 Minecraft 启动器：**布局与配色按 PCL2 实机截图逐页对齐**，底层是真实的 Mojang 下载与启动流程，而不是只有外壳的演示页。
 
-Electron + 原生 HTML/CSS/JS，无前端框架依赖，Windows / macOS / Linux 均可运行。当前版本：**1.2.2**。
+Electron + 原生 HTML/CSS/JS，无前端框架依赖，Windows / macOS / Linux 均可运行。当前版本：**1.2.3**。
 
 作者：**竹下一刀魂**。
 
@@ -35,7 +35,7 @@ npm run selftest     # 命令行跑真实下载链路自检（不启动界面）
 | 版本选择页 | ✅ | 直接对照 PCL2 2.13.1.1：蓝色独立标题栏 + 返回箭头、左侧文件夹列表、右侧可安装 Mod / 收藏夹 / 常规版本 / 不常用版本 / 愚人节版本 / 整合包分组；卡片标题带数量，旧版自动折叠，按发布时间排序，支持选用、收藏、版本设置和删除 |
 | 版本文件夹 | ✅ | 左侧文件夹列表支持新建 .minecraft、添加已有文件夹、切换和右键移出列表；移出只删记录不删文件，切换后自动刷新版本并重新选择可用版本；默认目录显示“官方启动器文件夹”，自定义目录显示父文件夹名 |
 | 启动游戏 | ✅ | 按官方格式构建 JVM 参数与 classpath，处理 `inheritsFrom` 合并、natives 解压、参数规则（rules）、离线 UUID（与官方 MD5 算法一致），日志实时回传 |
-| Fabric 安装 | ✅ | 通过 meta.fabricmc.net 安装，自动装好原版底座，版本命名同 PCL2（`1.21.4-Fabric 0.16.10`） |
+| Fabric 安装 | ✅ | 通过 meta.fabricmc.net 安装，自动装好原版底座，版本命名同 PCL2（`1.21.4-Fabric 0.16.10`）；选 Fabric 会按 PCL 默认行为一起安装 Fabric API |
 | Mod / 数据包 / 资源包 / 光影 | ✅ | Modrinth 全量搜索 + CurseForge 官方 Key/免 Key 精确项目名双模式；自动落到当前版本的 `mods` / `datapacks` / `resourcepacks` / `shaderpacks`；官方 Key 模式自动递归安装必需前置 |
 | 整合包 | ✅ | 支持 Modrinth `.mrpack` 与 CurseForge `.zip`：自动识别格式、安装基础版本与加载器、下载全部文件、写入 overrides；版本设置可导出 `.mrpack` |
 | 版本管理 | ✅ | 扫描 `versions/`，版本隔离、复制、删除、打开目录、查看主类 / Java 要求 / Mod 列表 |
@@ -50,8 +50,9 @@ npm run selftest     # 命令行跑真实下载链路自检（不启动界面）
 | SPL 小助手 | ✅ | 内置离线知识库 + 可配置在线 AI（DeepSeek / OpenAI / Ollama / 任意 OpenAI 兼容接口）。配置后结合版本、Java、镜像、设置和最近日志回答任意问题，回复流式逐字显示；可刷新模型、测试连接，失败保留已生成内容并回退本地知识库；Key 只存本机 |
 | 热门推荐 | ✅ | 下载页的 Mod / 整合包 / 数据包 / 资源包 / 光影包进入即按下载量展示热门内容，不需要先输入关键词；搜索框仍可按关键词筛选。 |
 | Java 自动查找 | ✅ | 启动时后台扫描，设置页可手动重扫：PATH、`JAVA_HOME` / `JDK_HOME` / `JRE_HOME`、Windows 注册表（JavaSoft / Adoptium / Microsoft / Zulu / Corretto / Semeru）、常见 JDK 目录、微软商店官方启动器 runtime，以及 PCL / HMCL / Prism / MultiMC / ATLauncher 等启动器自带 Java；自动选最高版本，结果为空时再走 Temurin 自动安装 |
-| Java 自动安装 | ✅ | 按版本所需 Java（8 / 17 / 21 / 25）从 Adoptium 拉取 Temurin JDK 最新版，自动解压、校验、探测并设为默认；下载页显示所需 Java 与「已就绪 / 自动安装」，启动时缺 Java 会弹窗询问后补装 |
+| Java 自动安装 | ✅ | 按版本所需 Java（8 / 17 / 21 / 25）从 Adoptium 拉取 Temurin JDK 最新版，自动解压、校验、探测并设为默认；下载页显示所需 Java 与「已就绪 / 自动安装」，启动时缺 Java 直接自动下载并继续，不弹确认框 |
 | Mod 管理 | ✅ | 版本设置内启用/禁用、删除、全部启用/禁用、打开 mods 目录；支持 `.jar.disabled` / `.zip.disabled` |
+| Mod 加载器 | ✅ | 版本设置 → Mod 管理里，原版可直接安装 Fabric / Forge / NeoForge / Quilt；安装为新的带加载器版本，原版保留，Fabric 自动带 Fabric API |
 | Forge / NeoForge | ✅ | 优先从 BMCLAPI 镜像下载 installer（失败回退官方）并以 `--installClient` 运行，跑完把目录重命名为 PCL2 风格（`1.20.1-Forge 47.4.29`）；版本列表优先走 BMCLAPI，失败时自动回退官方 maven-metadata，并读取 promos 标记推荐版。需要本机 Java 与网络 |
 | OptiFine / Quilt | ✅ | OptiFine 从 optifine.net 自动拿令牌下载官方安装器，headless 调用 `optifine.Installer` 完成补丁；Quilt 通过 meta.quiltmc.org 安装 |
 | 皮肤 | ✅ | Steve / Alex / 随机像素头像；支持自定义 64×64、128×128 皮肤 PNG；微软账号自动读取 Mojang profile 皮肤 |

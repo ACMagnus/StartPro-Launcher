@@ -297,7 +297,8 @@
             const opts = (pd.fabricLoaders || [])
               .map((l) => `<option value="${PCL.esc(l.version)}">${PCL.esc(l.version)}${l.stable ? '（推荐）' : ''}</option>`)
               .join('');
-            box.innerHTML = `<div class="set-row"><label>Fabric 版本</label><select class="select" id="imFab">${opts}</select></div>`;
+            box.innerHTML = `<div class="set-row"><label>Fabric 版本</label><select class="select" id="imFab">${opts}</select></div>
+              <div class="tiny muted mt-6">按 PCL 习惯，安装 Fabric 时会自动下载并安装 Fabric API。</div>`;
             nameInput.value = `${gv}-Fabric ${pd.fabricLoader || ''}`.trim();
           } else if (loader === 'quilt') {
             box.innerHTML = '<div class="set-row"><label>Quilt 版本</label><select class="select" id="imQuilt"><option>加载中…</option></select></div>';

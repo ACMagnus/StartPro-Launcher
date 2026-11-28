@@ -2973,7 +2973,7 @@ body:has(.launch-power) .web-note{display:none}
       <div class="brand">
         <span class="brand-mark">SPL</span>
         <span class="brand-logo">StartPro</span>
-        <span class="brand-ver" id="brandVer">1.2.2</span><span class="web-tag">WEB</span>
+        <span class="brand-ver" id="brandVer">1.2.3</span><span class="web-tag">WEB</span>
       </div>
       <div class="vdtb" id="vdBar" hidden>
         <button class="vd-back" id="vdBack" title="返回">
@@ -3331,6 +3331,15 @@ window.Icons = (() => {
       },
       export: async (id) => ({ ok: true, path: `${settings.gameDir}/exports/${id}.zip` }),
       exportPack: async (id) => ({ ok: true, path: `${settings.gameDir}/exports/${id}.mrpack` }),
+      installLoader: async ({ gameVersion, loader, loaderVersion, name }) => {
+        const label = loader === 'neo' ? 'NeoForge' : loader === 'quilt' ? 'Quilt' : loader === 'forge' ? 'Forge' : 'Fabric';
+        const id = String(name || `${gameVersion}-${label} ${loaderVersion}`).trim();
+        if (!VERSIONS.find((v) => v.id === id)) {
+          VERSIONS.unshift({ id, type: 'modified', loader: label, inheritsFrom: gameVersion, releaseTime: new Date().toISOString(), lastUsed: new Date().toISOString(), jar: true, size: 2712340, mods: 0 });
+        }
+        settings.version = id;
+        return { ok: true, id, fabricApi: loader === 'fabric' ? 'fabric-api-mock.jar' : '', fabricApiError: '' };
+      },
       list: async () => VERSIONS.map((v) => ({ ...v, dir: `${settings.gameDir}/versions/${v.id}` })),
       del: async (id) => {
         const i = VERSIONS.findIndex((v) => v.id === id);
@@ -5282,6 +5291,123 @@ window.Icons = (() => {
     },
   };
 
+  /* ---------------------- 给已有原版安装 Mod 加载器 ---------------------- */
+  const LOADER_LABEL = { fabric: 'Fabric', forge: 'Forge', neo: 'NeoForge', quilt: 'Quilt' };
+
+  async function loaderVersionsFor(loader, gameVersion) {
+    if (loader === 'fabric') {
+      const list = await API.fabric.loaders();
+      return (list || []).map((x) => ({ version: x.version, stable: !!x.stable }));
+    }
+    if (loader === 'forge' || loader === 'neo') {
+      const r = loader === 'neo' ? await API.forge.neoVersions(gameVersion) : await API.forge.versions(gameVersion);
+      if (r && r.error) throw new Error(r.error);
+      return (Array.isArray(r) ? r : []).map((x) => ({ version: x.version, stable: !!x.recommended || !!x.latest }));
+    }
+    if (loader === 'quilt') {
+      const r = await API.quilt.list(gameVersion);
+      if (r && r.error) throw new Error(r.error);
+      return (((r || {}).versions) || []).map((x) => ({ version: x.version, stable: !!x.stable }));
+    }
+    return [];
+  }
+
+  function openLoaderInstall(id, v) {
+    const base = (v && (v.gameVersion || v.inheritsFrom)) || id;
+    const body = `
+      <div class="set-row"><label>当前版本</label><input class="input" value="${PCL.esc(id)}" readonly /></div>
+      <div class="set-row"><label>基础版本</label><input class="input" value="${PCL.esc(base)}" readonly /></div>
+      <div class="set-row"><label>加载器</label>
+        <select class="select" id="liLoader">
+          <option value="fabric">Fabric</option>
+          <option value="forge">Forge</option>
+          <option value="neo">NeoForge</option>
+          <option value="quilt">Quilt</option>
+        </select>
+      </div>
+      <div id="liVerBox"><div class="tiny muted mt-8">正在读取加载器版本…</div></div>
+      <div class="set-row"><label>安装后名称</label><input class="input" id="liName" value="${PCL.esc(base + '-Fabric')}" /></div>
+      <div class="tiny muted mt-8" id="liHint">安装会新建一个带加载器的版本，原版保留。Fabric 会按 PCL 的习惯自动安装 Fabric API。</div>`;
+    PCL.modal({
+      title: `安装 Mod 加载器 · ${id}`,
+      width: 560,
+      body,
+      footer: '<button class="btn" data-close>取消</button><button class="btn primary" id="liInstall">开始安装</button>',
+      onMount: (wrap, close) => {
+        const loaderSel = PCL.$('#liLoader', wrap);
+        const box = PCL.$('#liVerBox', wrap);
+        const nameInput = PCL.$('#liName', wrap);
+        const hint = PCL.$('#liHint', wrap);
+        const installBtn = PCL.$('#liInstall', wrap);
+        let versions = [];
+
+        const refresh = async (loader) => {
+          versions = [];
+          installBtn.disabled = true;
+          box.innerHTML = '<div class="tiny muted mt-8">正在读取加载器版本…</div>';
+          try {
+            versions = await loaderVersionsFor(loader, base);
+            if (!versions.length) throw new Error(`没有找到适用于 ${base} 的 ${LOADER_LABEL[loader]} 版本`);
+            const opts = versions
+              .map((x) => `<option value="${PCL.esc(x.version)}">${PCL.esc(x.version)}${x.stable ? '（推荐）' : ''}</option>`)
+              .join('');
+            box.innerHTML = `<div class="set-row"><label>${LOADER_LABEL[loader]} 版本</label><select class="select" id="liVer">${opts}</select></div>`;
+            const verSel = PCL.$('#liVer', wrap);
+            const syncName = () => {
+              nameInput.value = `${base}-${LOADER_LABEL[loader]} ${verSel.value}`.trim();
+            };
+            verSel.addEventListener('change', syncName);
+            syncName();
+            hint.textContent = loader === 'fabric'
+              ? '安装会新建一个带 Fabric 的版本，原版保留；Fabric API 会一起安装（PCL 默认行为）。'
+              : '安装会新建一个带加载器的版本，原版保留；不会改动原来的版本。';
+            installBtn.disabled = false;
+          } catch (e) {
+            box.innerHTML = `<div class="tiny" style="color:var(--danger);line-height:1.7">${PCL.esc(String(e.message || e))}</div>`;
+            hint.textContent = '读取版本失败，可以重新选择加载器或稍后再试。';
+            installBtn.disabled = true;
+          }
+        };
+
+        loaderSel.addEventListener('change', () => refresh(loaderSel.value));
+        refresh('fabric');
+
+        installBtn.addEventListener('click', async () => {
+          const loader = loaderSel.value;
+          const verSel = PCL.$('#liVer', wrap);
+          if (!verSel || !verSel.value) return PCL.toast('请先选择加载器版本', 'error');
+          installBtn.disabled = true;
+          installBtn.textContent = '安装中…';
+          try {
+            const r = await API.versions.installLoader({
+              gameVersion: base,
+              loader,
+              loaderVersion: verSel.value,
+              name: nameInput.value.trim(),
+            });
+            if (!r || r.ok === false) throw new Error((r && r.error) || '安装失败');
+            await PCL.saveSettings({ version: r.id });
+            PCL.state.versions = await API.versions.list();
+            close();
+            PCL.toast(`已安装 ${r.id}${r.fabricApi ? '，Fabric API 已就绪' : ''}`, 'success', 4500);
+            if (r.fabricApiError) PCL.toast('Fabric API 下载失败：' + r.fabricApiError, 'error', 5000);
+            PCL.state.pageData.versionDetail = null;
+            PCL.state.pageData.vSettings = null;
+            PCL.state.pageData.vTab = 'mods';
+            if (PCL.state.page === 'version') PCL.go('version', { id: r.id });
+            else PCL.render();
+          } catch (e) {
+            PCL.toast('安装加载器失败：' + String(e.message || e).replace(/^Error invoking remote method .*?: /, ''), 'error', 5000);
+            installBtn.disabled = false;
+            installBtn.textContent = '开始安装';
+          }
+        });
+      },
+    });
+  }
+
+  P.openLoaderInstall = openLoaderInstall;
+
   /* ---------------------- 版本设置弹窗 ---------------------- */
   async function versionDetailModal(id) {
     let detail = null;
@@ -5452,8 +5578,29 @@ window.Icons = (() => {
           </div>`;
       } else if (tab === 'mods') {
         const mods = detail.mods || [];
+        const mainLoader = /fabric/i.test(detail.mainClass || '')
+          ? 'Fabric'
+          : /neoforge/i.test(detail.mainClass || '')
+            ? 'NeoForge'
+            : /quilt/i.test(detail.mainClass || '')
+              ? 'Quilt'
+              : /forge/i.test(detail.mainClass || '')
+                ? 'Forge'
+                : '';
+        const loaderName = String(v.loader || mainLoader || '').trim();
         body = `
           <div class="card vd-card">
+            <div class="card-title">Mod 加载器
+              <span class="tag" style="margin-left:8px;${loaderName ? 'background:#eefaf3;border-color:#bfe6d2;color:#2fa060' : ''}">${PCL.esc(loaderName || '原版')}</span>
+              ${loaderName ? '' : '<button class="btn small primary" style="margin-left:auto" id="vdInstallLoader">安装 Mod 加载器</button>'}
+            </div>
+            <div class="tiny muted" style="line-height:1.8">
+              ${loaderName
+                ? `当前是 ${PCL.esc(loaderName)} 版本，可以直接在「下载 → Mod」里安装模组。`
+                : '当前是原版版本。原版不能加载 Mod；安装一个带 Fabric / Forge / NeoForge / Quilt 的新版本后，再去「下载 → Mod」装模组。'}
+            </div>
+          </div>
+          <div class="card vd-card mt-12">
             <div class="card-title">Mod 管理 <span class="sub" style="margin-left:7px">${mods.length} 个文件</span>
               <div style="margin-left:auto;display:flex;gap:6px">
                 <button class="btn small" id="vdModsEnableAll">全部启用</button>
@@ -5603,6 +5750,10 @@ window.Icons = (() => {
       });
       PCL.$('#vdOpenDir2', root)?.addEventListener('click', () => API.versions.open(id));
       PCL.$('#vdOpenMods', root)?.addEventListener('click', () => API.mods.open(id));
+      PCL.$('#vdInstallLoader', root)?.addEventListener('click', () => {
+        const v = (state.versions || []).find((x) => x.id === id) || { id };
+        openLoaderInstall(id, v);
+      });
 
       const refreshMods = async () => {
         state.pageData.versionDetail = null;
@@ -6007,7 +6158,8 @@ window.Icons = (() => {
             const opts = (pd.fabricLoaders || [])
               .map((l) => `<option value="${PCL.esc(l.version)}">${PCL.esc(l.version)}${l.stable ? '（推荐）' : ''}</option>`)
               .join('');
-            box.innerHTML = `<div class="set-row"><label>Fabric 版本</label><select class="select" id="imFab">${opts}</select></div>`;
+            box.innerHTML = `<div class="set-row"><label>Fabric 版本</label><select class="select" id="imFab">${opts}</select></div>
+              <div class="tiny muted mt-6">按 PCL 习惯，安装 Fabric 时会自动下载并安装 Fabric API。</div>`;
             nameInput.value = `${gv}-Fabric ${pd.fabricLoader || ''}`.trim();
           } else if (loader === 'quilt') {
             box.innerHTML = '<div class="set-row"><label>Quilt 版本</label><select class="select" id="imQuilt"><option>加载中…</option></select></div>';

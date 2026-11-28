@@ -102,7 +102,7 @@ function buildLaunch(opts) {
     user_properties: account.properties ? JSON.stringify(account.properties) : '{}',
     natives_directory: natives,
     launcher_name: 'StartPro Launcher',
-    launcher_version: '1.2.2',
+    launcher_version: '1.2.3',
     classpath: cp.join(path.delimiter),
     classpath_separator: path.delimiter,
     library_directory: path.join(gameDir, 'libraries'),
@@ -116,7 +116,7 @@ function buildLaunch(opts) {
   const jvmArgs = [];
   jvmArgs.push(`-Djava.library.path=${natives}`);
   jvmArgs.push(`-Dminecraft.launcher.brand=${opts.launcherBrand || 'StartPro'}`);
-  jvmArgs.push('-Dminecraft.launcher.version=1.2.2');
+  jvmArgs.push('-Dminecraft.launcher.version=1.2.3');
   if (opts.gameTitle) jvmArgs.push(`-Dminecraft.window.title=${opts.gameTitle}`);
   jvmArgs.push('-Dfile.encoding=UTF-8');
   if (version.arguments) {

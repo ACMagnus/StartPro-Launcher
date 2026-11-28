@@ -96,7 +96,7 @@ async function installedJava(rootDir) {
 async function downloadArchive(pkg, dest, onProgress) {
   await fsp.mkdir(path.dirname(dest), { recursive: true });
   const tmp = dest + '.part';
-  const res = await fetch(pkg.link, { headers: { 'User-Agent': 'StartPro/1.2.2' } });
+  const res = await fetch(pkg.link, { headers: { 'User-Agent': 'StartPro/1.2.3' } });
   if (!res.ok || !res.body) throw new Error(`下载失败 HTTP ${res.status}`);
   const total = Number(res.headers.get('content-length')) || pkg.size || 0;
   const hash = crypto.createHash('sha256');

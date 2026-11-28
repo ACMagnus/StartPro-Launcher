@@ -1,6 +1,6 @@
 {
   "name": "startpro-launcher",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "StartPro Launcher (SPL) - an Electron Minecraft launcher",
   "main": "main.js",
   "scripts": {

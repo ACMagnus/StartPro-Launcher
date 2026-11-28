@@ -9,7 +9,7 @@ const { Readable, Transform } = require('stream');
 const { pipeline } = require('stream/promises');
 const fsp = fs.promises;
 
-const UA = 'StartPro/1.2.2 (Electron)';
+const UA = 'StartPro/1.2.3 (Electron)';
 
 async function fetchJson(url, { timeout = 20000, retries = 3 } = {}) {
   let lastErr;

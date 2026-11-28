@@ -33,6 +33,7 @@ contextBridge.exposeInMainWorld('pcl', {
     setSettings: (id, patch) => invoke('versions:settings:set', id, patch),
     export: (id) => invoke('versions:export', id),
     exportPack: (id, name) => invoke('versions:exportPack', id, name),
+    installLoader: (payload) => invoke('versions:installLoader', payload),
   },
   diagnostics: { run: (logs) => invoke('diagnostics:run', logs) },
   personal: {

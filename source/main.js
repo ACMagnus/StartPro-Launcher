@@ -552,7 +552,7 @@ function registerIpc() {
     if (!acc || acc.type !== 'msa' || !acc.accessToken) return { ok: false };
     try {
       const res = await fetch('https://api.minecraftservices.com/minecraft/profile', {
-        headers: { Authorization: `Bearer ${acc.accessToken}`, 'User-Agent': 'StartPro/1.2.2' },
+        headers: { Authorization: `Bearer ${acc.accessToken}`, 'User-Agent': 'StartPro/1.2.3' },
         signal: AbortSignal.timeout(15000),
       });
       if (!res.ok) return { ok: false };
@@ -722,7 +722,8 @@ function registerIpc() {
     const isNeo = kind === 'neoforge';
     const task = makeTask('forge', `安装 ${isNeo ? 'NeoForge' : 'Forge'} ${isNeo ? neoVersion : forgeVersion}`);
     try {
-      const java = await pickJava();
+      // 缺 Java 时直接下载；Forge / NeoForge 安装器必须能运行
+      const java = await ensureJavaForVersion(mcVersion, task);
       // 基础版本已安装时不需要版本清单；有缓存就顺带传给 ensureBase，避免重复请求
       const manifest = manifestCache ? manifestCache.data : undefined;
       const r = isNeo
@@ -756,7 +757,7 @@ function registerIpc() {
     }
   });
   ipcMain.handle('fabric:loaders', async () => fabric.listLoaders());
-  ipcMain.handle('install:fabric', async (e, { gameVersion, loaderVersion, installBase, name = '' }) => {
+  ipcMain.handle('install:fabric', async (e, { gameVersion, loaderVersion, installBase, name = '', withFabricApi = true }) => {
     const task = makeTask('fabric', `安装 Fabric ${loaderVersion}`);
     try {
       const r = await fabric.installFabric({
@@ -770,7 +771,110 @@ function registerIpc() {
         onProgress: task.onProgress,
       });
       task.done({ success: true, id: r.id });
-      return { ok: true, id: r.id };
+
+      // PCL 选择 Fabric 时会一并装上 Fabric API；失败只提示，不影响 Loader 安装
+      let fabricApi = '';
+      let fabricApiError = '';
+      if (withFabricApi !== false) {
+        const apiTask = makeTask('mod', '安装 Fabric API');
+        try {
+          const rr = await modrinth.installProject({
+            idOrSlug: 'fabric-api',
+            title: 'Fabric API',
+            gameDir: config.get('gameDir'),
+            versionId: r.id,
+            gameVersion,
+            loader: 'fabric',
+            isolation: effectiveLaunch(r.id).isolation,
+            onProgress: apiTask.onProgress,
+          });
+          fabricApi = rr.file;
+          apiTask.done({ success: true, file: rr.file });
+        } catch (err) {
+          fabricApiError = String(err.message || err);
+          apiTask.done({ success: false, error: fabricApiError });
+        }
+      }
+      return { ok: true, id: r.id, fabricApi, fabricApiError };
+    } catch (err) {
+      task.done({ success: false, error: String(err.message || err) });
+      return { ok: false, error: String(err.message || err) };
+    }
+  });
+
+  // —— 给已有原版安装 Mod 加载器（PCL 风格：生成新的带加载器版本，不改原版） ——
+  ipcMain.handle('versions:installLoader', async (e, { gameVersion, loader, loaderVersion, name = '' }) => {
+    if (!gameVersion) throw new Error('缺少基础游戏版本');
+    if (!loader) throw new Error('请选择 Mod 加载器');
+    if (!loaderVersion) throw new Error('请选择加载器版本');
+    const label = loader === 'neo' ? 'NeoForge' : loader === 'quilt' ? 'Quilt' : loader === 'forge' ? 'Forge' : 'Fabric';
+    const task = makeTask('loader', `安装 ${label} ${loaderVersion}`);
+    const gameDir = config.get('gameDir');
+    try {
+      let r;
+      let fabricApi = '';
+      let fabricApiError = '';
+      if (loader === 'fabric') {
+        r = await fabric.installFabric({
+          gameVersion,
+          loaderVersion,
+          gameDir,
+          installBase: true,
+          name,
+          mirror: installMirror(),
+          manifest: manifestCache ? manifestCache.data : undefined,
+          onProgress: task.onProgress,
+        });
+        const apiTask = makeTask('mod', '安装 Fabric API');
+        try {
+          const rr = await modrinth.installProject({
+            idOrSlug: 'fabric-api',
+            title: 'Fabric API',
+            gameDir,
+            versionId: r.id,
+            gameVersion,
+            loader: 'fabric',
+            isolation: effectiveLaunch(r.id).isolation,
+            onProgress: apiTask.onProgress,
+          });
+          fabricApi = rr.file;
+          apiTask.done({ success: true, file: rr.file });
+        } catch (err) {
+          fabricApiError = String(err.message || err);
+          apiTask.done({ success: false, error: fabricApiError });
+        }
+      } else if (loader === 'quilt') {
+        r = await quilt.installQuilt({
+          gameVersion,
+          loaderVersion,
+          gameDir,
+          installBase: true,
+          name,
+          mirror: installMirror(),
+          manifest: manifestCache ? manifestCache.data : undefined,
+          onProgress: task.onProgress,
+        });
+      } else if (loader === 'forge' || loader === 'neo') {
+        const javaPath = await ensureJavaForVersion(gameVersion, task);
+        const common = {
+          mcVersion: gameVersion,
+          gameDir,
+          name,
+          javaPath,
+          mirror: installMirror(),
+          manifest: manifestCache ? manifestCache.data : undefined,
+          installBase: true,
+          onProgress: task.onProgress,
+          onLog: task.log,
+        };
+        r = loader === 'neo'
+          ? await forge.installNeoForge({ ...common, neoVersion: loaderVersion })
+          : await forge.installForge({ ...common, forgeVersion: loaderVersion });
+      } else {
+        throw new Error(`不支持的加载器：${loader}`);
+      }
+      task.done({ success: true, id: r.id });
+      return { ok: true, id: r.id, fabricApi, fabricApiError };
     } catch (err) {
       task.done({ success: false, error: String(err.message || err) });
       return { ok: false, error: String(err.message || err) };
@@ -978,16 +1082,13 @@ function registerIpc() {
         if (config.get('autoInstallJava') === false) {
           throw new Error(`缺少 Java ${major}，请先在 设置 → 游戏 → Java 中安装`);
         }
-        const answer = await dialog.showMessageBox(win, {
-          type: 'question',
-          buttons: ['自动下载', '取消'],
-          defaultId: 0,
-          cancelId: 1,
-          title: '缺少 Java',
-          message: `运行「${versionId}」需要 Java ${major}`,
-          detail: '当前没有检测到满足要求的 Java。可由启动器自动下载 Adoptium Temurin JDK（约 200 MB）。',
+        // PCL 行为：点启动后缺少 Java 直接下载，不弹确认框
+        send('launch:phase', {
+          versionId,
+          phase: '安装 Java',
+          detail: `缺少 Java ${major}，正在自动下载 Temurin JDK`,
+          progress: 40,
         });
-        if (answer.response !== 0) throw new Error(`缺少 Java ${major}，请先在 设置 → 游戏 → Java 中安装`);
         checkCancel();
         launchPhase('安装 Java', `正在下载 Temurin JDK ${major}`, 40);
         const task = makeTask('java', `安装 Java ${major}`);
@@ -1519,6 +1620,32 @@ function registerIpc() {
     freeMem: Math.round(require('os').freemem() / 1024 / 1024),
   }));
   ipcMain.handle('news:get', () => NEWS);
+}
+
+/** 给加载器安装器准备 Java；没有就按版本要求直接下载，不再弹确认框 */
+async function ensureJavaForVersion(versionId, task = null) {
+  const pick = await java.pickJavaFor(versionId, config.get('gameDir'), config.get('javaPath'), config.root);
+  if (pick.java) return pick.java.path;
+  if (config.get('autoInstallJava') === false) {
+    throw new Error(`缺少 Java ${pick.required.major}，请先在 设置 → 游戏 → Java 中安装`);
+  }
+  const major = pick.required.major;
+  if (task) task.log(`未找到 Java ${major}，自动下载 Temurin JDK`);
+  const installed = await java.installJava(major, {
+    rootDir: config.root,
+    onLog: task ? task.log : () => {},
+    onProgress: (got, total) => {
+      if (!task) return;
+      task.onProgress({
+        phase: 'java',
+        title: `下载 Java ${major}`,
+        detail: `${(got / 1048576).toFixed(0)} / ${(total / 1048576).toFixed(0)} MB`,
+        current: got,
+        total: total || got,
+      });
+    },
+  });
+  return installed.path;
 }
 
 /** 选一个可用于运行 installer / 启动游戏的 Java */

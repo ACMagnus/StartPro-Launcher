@@ -267,6 +267,15 @@
       },
       export: async (id) => ({ ok: true, path: `${settings.gameDir}/exports/${id}.zip` }),
       exportPack: async (id) => ({ ok: true, path: `${settings.gameDir}/exports/${id}.mrpack` }),
+      installLoader: async ({ gameVersion, loader, loaderVersion, name }) => {
+        const label = loader === 'neo' ? 'NeoForge' : loader === 'quilt' ? 'Quilt' : loader === 'forge' ? 'Forge' : 'Fabric';
+        const id = String(name || `${gameVersion}-${label} ${loaderVersion}`).trim();
+        if (!VERSIONS.find((v) => v.id === id)) {
+          VERSIONS.unshift({ id, type: 'modified', loader: label, inheritsFrom: gameVersion, releaseTime: new Date().toISOString(), lastUsed: new Date().toISOString(), jar: true, size: 2712340, mods: 0 });
+        }
+        settings.version = id;
+        return { ok: true, id, fabricApi: loader === 'fabric' ? 'fabric-api-mock.jar' : '', fabricApiError: '' };
+      },
       list: async () => VERSIONS.map((v) => ({ ...v, dir: `${settings.gameDir}/versions/${v.id}` })),
       del: async (id) => {
         const i = VERSIONS.findIndex((v) => v.id === id);

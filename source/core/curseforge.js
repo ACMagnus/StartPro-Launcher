@@ -28,7 +28,7 @@ async function cfJson(apiPath, key, params = {}) {
   const url = new URL(API + apiPath);
   for (const [k, v] of Object.entries(params)) if (v != null && v !== '') url.searchParams.set(k, String(v));
   const res = await fetch(url, {
-    headers: { 'x-api-key': requireKey(key), Accept: 'application/json', 'User-Agent': 'StartPro/1.2.2' },
+    headers: { 'x-api-key': requireKey(key), Accept: 'application/json', 'User-Agent': 'StartPro/1.2.3' },
     signal: AbortSignal.timeout(20000),
   });
   if (!res.ok) {
@@ -138,7 +138,7 @@ async function widgetProject(idOrSlug, kind = 'mod') {
   const cached = widgetCache.get(cacheKey);
   if (cached && cached.expires > Date.now()) return cached.data;
   const res = await fetch(`${WIDGET_API}/${section}/${encodeURIComponent(key)}`, {
-    headers: { Accept: 'application/json', 'User-Agent': 'StartPro/1.2.2 (+https://github.com)' },
+    headers: { Accept: 'application/json', 'User-Agent': 'StartPro/1.2.3 (+https://github.com)' },
     signal: AbortSignal.timeout(45000),
   });
   if (!res.ok) throw new Error(`CurseForge 免 Key 元数据请求失败：HTTP ${res.status}`);
