@@ -71,7 +71,7 @@ StartPro Launcher（SPL）不是只画了一层启动器外壳。它的下载、
 
 ### 快速开始
 
-1. 下载并解压 `StartPro-Launcher-1.2.1-bat.zip`。
+1. 下载并解压 `StartPro-Launcher-1.2.1-hot.zip`。
 2. 双击 `start.bat`，或直接双击 `StartPro Launcher.exe`。
 3. 首次启动会创建配置目录 `%APPDATA%\StartPro Launcher`，不会接管你现有的 `.minecraft`。
 4. 在「设置 → 游戏 → 游戏目录」切换到自己的 `.minecraft`，或直接安装一个新版本。
