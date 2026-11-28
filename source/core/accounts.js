@@ -35,7 +35,7 @@ async function loginAuthlib({ server, username, password }) {
   const clientToken = crypto.randomBytes(16).toString('hex');
   const res = await fetch(`${base}/authserver/authenticate`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'User-Agent': 'StartPro/1.2.1' },
+    headers: { 'Content-Type': 'application/json', 'User-Agent': 'StartPro/1.2.2' },
     body: JSON.stringify({
       username,
       password,
@@ -80,7 +80,7 @@ async function postJson(url, body, token) {
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      'User-Agent': 'StartPro/1.2.1',
+      'User-Agent': 'StartPro/1.2.2',
       ...(token ? { Authorization: `Bearer ${token}` } : {}),
     },
     body: JSON.stringify(body),
@@ -141,7 +141,7 @@ async function completeMicrosoft(msAccessToken, refreshToken = '') {
   });
   if (!mc.access_token) throw new Error('Minecraft 登录未返回 access_token');
   const profileRes = await fetch('https://api.minecraftservices.com/minecraft/profile', {
-    headers: { Authorization: `Bearer ${mc.access_token}`, 'User-Agent': 'StartPro/1.2.1' },
+    headers: { Authorization: `Bearer ${mc.access_token}`, 'User-Agent': 'StartPro/1.2.2' },
     signal: AbortSignal.timeout(20000),
   });
   if (!profileRes.ok) throw new Error('该微软账号没有 Minecraft Java 版所有权');

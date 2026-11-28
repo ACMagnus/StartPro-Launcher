@@ -552,7 +552,7 @@ function registerIpc() {
     if (!acc || acc.type !== 'msa' || !acc.accessToken) return { ok: false };
     try {
       const res = await fetch('https://api.minecraftservices.com/minecraft/profile', {
-        headers: { Authorization: `Bearer ${acc.accessToken}`, 'User-Agent': 'StartPro/1.2.1' },
+        headers: { Authorization: `Bearer ${acc.accessToken}`, 'User-Agent': 'StartPro/1.2.2' },
         signal: AbortSignal.timeout(15000),
       });
       if (!res.ok) return { ok: false };

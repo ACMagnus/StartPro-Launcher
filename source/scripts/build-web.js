@@ -15,7 +15,7 @@ doc = doc.replace(/\s*<script src="js\/[^"]+"><\/script>/g, '');
 doc = doc.replace('</head>', () => `  <style>\n${css}\n  </style>\n</head>`);
 doc = doc.replace('</body>', () => `  <script>\n${js}\n  </script>\n</body>`);
 doc = doc.replace('<span class="brand-ver" id="brandVer">', '<span class="brand-ver" id="brandVer">');
-doc = doc.replace('<span class="brand-ver" id="brandVer">1.2.1</span>', '<span class="brand-ver" id="brandVer">1.2.1</span><span class="web-tag">WEB</span>');
+doc = doc.replace('<span class="brand-ver" id="brandVer">1.2.2</span>', '<span class="brand-ver" id="brandVer">1.2.2</span><span class="web-tag">WEB</span>');
 doc = doc.replace('<title>StartPro Launcher (SPL) · Minecraft Launcher</title>', '<title>StartPro Web · Minecraft 启动器网页版</title>');
 doc = doc.replace('</body>', '  <div class="web-note">网页版 · 真实下载/启动请用桌面版</div>\n</body>');
 doc = doc.replace('</style>', `.titlebar .win-controls{display:none}

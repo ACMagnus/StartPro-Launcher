@@ -4,7 +4,7 @@
  * 在 Windows 上退出旧进程后自动替换文件并重新启动。
  *
  * 清单格式：
- * { "version": "1.2.1", "notes": "...", "url": "https://...zip", "sha256": "..." }
+ * { "version": "1.2.2", "notes": "...", "url": "https://...zip", "sha256": "..." }
  */
 const fs = require('fs');
 const path = require('path');

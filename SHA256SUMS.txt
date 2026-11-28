@@ -1,2 +1,2 @@
-efd848572a38e68c676e6886894d3199821739e4d0b9e85d932c4926e9e1c21e  StartPro-Launcher-1.2.1-hot.zip
-f9a01d427b73aa23d1815e4c6aa3036e07b1ab99f19df814e4442c0776f5115e  StartPro-Launcher-1.2.1-source.zip
+1d69af1c16ac550eafd8f6710b9fb33f5181b08ead3536b34629915704f55c96  StartPro-Launcher-1.2.2.zip
+c9ce1a4d3e94beded5d34d6b52f30fd2c6135dc934f0ca3433b9d48f208b8b42  StartPro-Launcher-1.2.2-source.zip

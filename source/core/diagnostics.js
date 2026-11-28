@@ -40,7 +40,7 @@ async function checkDisk(dir) {
 async function ping(url) {
   const started = Date.now();
   try {
-    const res = await fetch(url, { headers: { 'User-Agent': 'StartPro/1.2.1' }, signal: AbortSignal.timeout(6000) });
+    const res = await fetch(url, { headers: { 'User-Agent': 'StartPro/1.2.2' }, signal: AbortSignal.timeout(6000) });
     try { if (res.body && res.body.cancel) await res.body.cancel(); } catch {}
     return { ok: res.ok, status: res.status, ms: Date.now() - started };
   } catch (e) {
