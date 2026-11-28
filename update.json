@@ -1,7 +1,7 @@
 {
-  "version": "1.2.1",
-  "notes": "新增热门推荐：Mod / 整合包 / 数据包 / 资源包 / 光影包进入下载页即按下载量展示热门内容，不需要先搜索；PCL2 风格版本选择整页、启动自动扫描本机已有 Java、Java 版本匹配收紧、关于页 PCL2 鸣谢均已保留。",
-  "url": "https://aka.doubaocdn.com/s/0oqQSQDVtN",
-  "sha256": "efd848572a38e68c676e6886894d3199821739e4d0b9e85d932c4926e9e1c21e",
+  "version": "1.2.2",
+  "notes": "热门推荐正式构建：Mod / 整合包 / 数据包 / 资源包 / 光影包进入下载页即按下载量展示热门，不需要先搜索。同时修复同版本包无法触发自动更新的问题；PCL2 风格版本选择、Java 自动扫描与鸣谢保留。",
+  "url": "https://aka.doubaocdn.com/s/Q1WRxnYlDU",
+  "sha256": "0890356b96a26c87bf78a34d0455aa06138986521986bac7ff6e92d823a3ae55",
   "publishedAt": "2026-11-28"
 }
