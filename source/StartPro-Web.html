@@ -1903,6 +1903,21 @@ body[data-page="version"] .view { padding: 0; display: flex; }
   color: var(--text-3);
 }
 
+.hot-chip {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 7px;
+  padding: 2px 7px;
+  border: 1px solid #bfdcf8;
+  border-radius: 20px;
+  background: #eff7ff;
+  color: #267bc1;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .04em;
+  vertical-align: 1px;
+}
+
 .install-row {
   display: flex;
   align-items: center;
@@ -6188,10 +6203,10 @@ window.Icons = (() => {
 
   /* ---------------------- Mod / 资源包搜索 ---------------------- */
   const CONTENT_META = {
-    mod: { key: 'modSearch', queryKey: 'modQuery', type: 'mod', title: 'Mod 下载', desc: 'Mod 会下载到当前所选版本的 mods 目录，请确认版本与加载器匹配。', ph: '搜索 Mod，例如 sodium、create…' },
-    datapack: { key: 'datapackSearch', queryKey: 'datapackQuery', type: 'datapack', title: '数据包下载', desc: '数据包会下载到当前版本的 datapacks 目录，适用于刷怪、地形、配方等原版扩展。', ph: '搜索数据包，例如 terralith、tectonic…' },
-    resource: { key: 'resourceSearch', queryKey: 'resourceQuery', type: 'resourcepack', title: '资源包下载', desc: '资源包会下载到当前版本的 resourcepacks 目录。', ph: '搜索资源包，例如 faithful、fresh animations…' },
-    shader: { key: 'shaderSearch', queryKey: 'shaderQuery', type: 'shader', title: '光影包下载', desc: '光影包会下载到当前版本的 shaderpacks 目录，需要 Iris 或 OptiFine 才能生效。', ph: '搜索光影，例如 complementary、bsl…' },
+    mod: { key: 'modSearch', queryKey: 'modQuery', type: 'mod', title: 'Mod 下载', desc: '进入页面默认按下载量展示热门 Mod；下载会落到当前版本的 mods 目录，请确认版本与加载器匹配。', ph: '搜索 Mod，例如 sodium、create；留空查看热门…' },
+    datapack: { key: 'datapackSearch', queryKey: 'datapackQuery', type: 'datapack', title: '数据包下载', desc: '进入页面默认展示热门数据包；下载会落到当前版本的 datapacks 目录，适用于刷怪、地形、配方等原版扩展。', ph: '搜索数据包，例如 terralith、tectonic；留空查看热门…' },
+    resource: { key: 'resourceSearch', queryKey: 'resourceQuery', type: 'resourcepack', title: '资源包下载', desc: '进入页面默认展示热门资源包；下载会落到当前版本的 resourcepacks 目录。', ph: '搜索资源包，例如 faithful、fresh animations；留空查看热门…' },
+    shader: { key: 'shaderSearch', queryKey: 'shaderQuery', type: 'shader', title: '光影包下载', desc: '进入页面默认展示热门光影包；下载会落到当前版本的 shaderpacks 目录，需要 Iris 或 OptiFine 才能生效。', ph: '搜索光影，例如 complementary、bsl；留空查看热门…' },
   };
 
   function searchHtml(state, tab) {
@@ -6200,8 +6215,11 @@ window.Icons = (() => {
     const key = meta.key;
     const res = pd[key];
     const kind = meta.type;
-    const query = pd[meta.queryKey] || '';
+    const query = String(pd[meta.queryKey] || '').trim();
     const source = tab === 'mod' ? (pd.modSource || 'modrinth') : 'modrinth';
+    const loading = !!pd[key + 'Loading'];
+    const isHot = !query;
+    const curseKeyless = source === 'curseforge' && !String((state.settings && state.settings.curseForgeApiKey) || '').trim();
 
     const cards = res && res.hits
       ? res.hits
@@ -6224,16 +6242,22 @@ window.Icons = (() => {
     const err = pd[key + 'Error'];
     const currentId = (PCL.currentVersion() && PCL.currentVersion().id) || state.settings.version || '';
     const snapshot = /snapshot|pre-release|pre\d|^w\d|rc\d/i.test(currentId);
-    const emptyText = tab === 'mod' && snapshot
+    const emptyText = tab === 'mod' && snapshot && !isHot
       ? `没有找到支持 ${PCL.esc(gameVersionOfCurrent(state))} 的 Mod。当前版本是快照（${PCL.esc(currentId)}），${source === 'curseforge' ? 'CurseForge' : 'Modrinth'} 通常不收录快照；请切换到正式版后再搜索。`
-      : '没有找到相关项目，换个关键词试试';
-    const body = err
-      ? `<div class="empty">搜索失败：${PCL.esc(String(err).replace(/^Error invoking remote method .*?: /, ''))}<div style="margin-top:10px"><button class="btn small" data-retry>重试</button></div></div>`
-      : res
-        ? cards
-          ? `<div class="result-grid">${cards}</div>`
-          : `<div class="empty">${emptyText}</div>`
-        : `<div class="empty">输入关键词后点击搜索</div>`;
+      : isHot
+        ? '暂时没有可用的热门推荐，检查网络后重试'
+        : '没有找到相关项目，换个关键词试试';
+    const errorBody = err
+      ? `<div class="empty">${curseKeyless && isHot ? 'CurseForge 免 Key 只能按项目名或链接精确搜索，不能浏览热门。' : `搜索失败：${PCL.esc(String(err).replace(/^Error invoking remote method .*?: /, ''))}`}<div style="margin-top:10px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap">${curseKeyless && isHot ? '<button class="btn small primary" data-cfsrc="modrinth">查看 Modrinth 热门</button>' : ''}<button class="btn small" data-retry>重试</button></div></div>`
+      : loading
+        ? `<div class="empty">正在加载${isHot ? '热门推荐' : '搜索结果'}…</div>`
+        : res
+          ? cards
+            ? `<div class="result-grid">${cards}</div>`
+            : `<div class="empty">${emptyText}</div>`
+          : `<div class="empty">${query ? '点击“搜索”获取结果' : '正在加载热门推荐…'}</div>`;
+
+    const body = errorBody;
 
     const sourceRow = tab === 'mod'
       ? `<div class="source-row">
@@ -6246,25 +6270,77 @@ window.Icons = (() => {
     return `
     <div class="dl-head">
       <div>
-        <div class="title">${meta.title}</div>
+        <div class="title">${meta.title}${isHot ? '<span class="hot-chip">热门</span>' : ''}</div>
         <div class="desc">${meta.desc}</div>
       </div>
     </div>
     ${sourceRow}
     <div class="search-bar">
       <input class="input" id="searchInput" placeholder="${meta.ph}" value="${PCL.esc(query)}" />
-      <button class="btn primary" id="btnSearch">${Icons.search}搜索</button>
+      <button class="btn primary" id="btnSearch">${Icons.search}${isHot ? '刷新热门' : '搜索'}</button>
     </div>
     <div class="tiny muted" style="margin-bottom:10px">
-      数据来源 ${source === 'curseforge' ? (pd.modSearchKeyless ? 'CurseForge 公开元数据 + ForgeCDN' : 'CurseForge 官方 API') : 'Modrinth 开放 API'} · 当前版本：<b style="color:var(--text-2)">${PCL.esc(state.settings.version || '未选择')}</b>
+      数据来源 ${source === 'curseforge' ? (pd.modSearchKeyless ? 'CurseForge 公开元数据 + ForgeCDN' : 'CurseForge 官方 API') : 'Modrinth 开放 API'} · ${isHot ? '热门推荐，按下载量排序' : '关键词搜索'} · 当前版本：<b style="color:var(--text-2)">${PCL.esc(state.settings.version || '未选择')}</b>
     </div>
     <div class="card" style="padding:${res && res.hits && res.hits.length ? '12px' : '0'};${res && res.hits && res.hits.length ? '' : 'background:transparent;border-color:transparent;box-shadow:none'}">${body}</div>`;
+  }
+
+  /** 进入页面即加载热门，不要求用户先输入关键词 */
+  async function loadHotContent(state, tab) {
+    const pd = state.pageData;
+    const meta = CONTENT_META[tab] || CONTENT_META.mod;
+    const key = meta.key;
+    if (String(pd[meta.queryKey] || '').trim() || pd[key] || pd[key + 'Loading']) return;
+    const source = tab === 'mod' ? (pd.modSource || 'modrinth') : 'modrinth';
+    const hasCfKey = !!(state.settings && state.settings.curseForgeApiKey && String(state.settings.curseForgeApiKey).trim());
+    if (source === 'curseforge' && !hasCfKey) {
+      pd[key] = null;
+      pd[key + 'Error'] = 'CurseForge 免 Key 不能浏览热门，只支持精确项目名或链接搜索。';
+      PCL.render();
+      return;
+    }
+    const token = (pd[key + 'Token'] || 0) + 1;
+    pd[key + 'Token'] = token;
+    pd[key + 'Loading'] = true;
+    pd[key + 'Error'] = '';
+    try {
+      if (source === 'curseforge') {
+        const r = await API.curseforge.search({ query: '', kind: 'mod', gameVersion: gameVersionOfCurrent(state), loader: loaderOfCurrent(state) });
+        if (r && r.ok === false) throw new Error(r.error || 'CurseForge 热门加载失败');
+        if (pd[key + 'Token'] !== token) return;
+        pd.modSearchKeyless = !!r.keyless;
+        pd[key] = { hits: r.hits || [], total: r.total || 0 };
+      } else {
+        const r = await API.modrinth.search({
+          query: '',
+          type: meta.type,
+          gameVersion: gameVersionOfCurrent(state),
+          loader: meta.type === 'mod' ? loaderOfCurrent(state) : '',
+          limit: 18,
+          sort: 'downloads',
+        });
+        if (pd[key + 'Token'] !== token) return;
+        pd[key] = r;
+      }
+    } catch (e) {
+      if (pd[key + 'Token'] !== token) return;
+      pd[key] = { hits: [] };
+      pd[key + 'Error'] = String(e.message || e).replace(/^Error invoking remote method .*?: /, '');
+    } finally {
+      if (pd[key + 'Token'] === token) {
+        pd[key + 'Loading'] = false;
+        PCL.render();
+      }
+    }
   }
 
   function mountSearch(root, state, tab) {
     const pd = state.pageData;
     const meta = CONTENT_META[tab] || CONTENT_META.mod;
     const input = PCL.$('#searchInput', root);
+    const source = () => (tab === 'mod' ? (pd.modSource || 'modrinth') : 'modrinth');
+    const hasCfKey = () => !!(state.settings && state.settings.curseForgeApiKey && String(state.settings.curseForgeApiKey).trim());
+
     const doSearch = async () => {
       const q = input.value.trim();
       pd[meta.queryKey] = q;
@@ -6273,13 +6349,18 @@ window.Icons = (() => {
         btn.disabled = true;
         btn.textContent = '搜索中…';
       }
+      const token = (pd[meta.key + 'Token'] || 0) + 1;
+      pd[meta.key + 'Token'] = token;
+      pd[meta.key + 'Loading'] = true;
+      pd[meta.key + 'Error'] = '';
       try {
         const gameVersion = gameVersionOfCurrent(state);
         const loader = loaderOfCurrent(state);
-        const source = tab === 'mod' ? (pd.modSource || 'modrinth') : 'modrinth';
-        if (source === 'curseforge') {
+        if (source() === 'curseforge') {
+          if (!q && !hasCfKey()) throw new Error('CurseForge 免 Key 不能浏览热门，请输入精确项目名或项目链接');
           const r = await API.curseforge.search({ query: q, kind: 'mod', gameVersion, loader });
           if (r && r.ok === false) throw new Error(r.error || 'CurseForge 搜索失败');
+          if (pd[meta.key + 'Token'] !== token) return;
           pd.modSearchKeyless = !!r.keyless;
           pd[meta.key] = { hits: r.hits || [], total: r.total || 0 };
         } else {
@@ -6289,26 +6370,36 @@ window.Icons = (() => {
             gameVersion,
             loader: meta.type === 'mod' ? loader : '',
             limit: 18,
+            sort: q ? 'relevance' : 'downloads',
           });
+          if (pd[meta.key + 'Token'] !== token) return;
           pd[meta.key] = r;
         }
         pd[meta.key + 'Error'] = '';
       } catch (e) {
-        PCL.toast('搜索失败：' + (e.message || e), 'error');
+        if (pd[meta.key + 'Token'] !== token) return;
+        const msg = String(e.message || e).replace(/^Error invoking remote method .*?: /, '');
+        PCL.toast('搜索失败：' + msg, 'error');
         pd[meta.key] = { hits: [] };
-        pd[meta.key + 'Error'] = String(e.message || e).replace(/^Error invoking remote method .*?: /, '');
+        pd[meta.key + 'Error'] = msg;
+      } finally {
+        if (pd[meta.key + 'Token'] === token) {
+          pd[meta.key + 'Loading'] = false;
+          PCL.render().then(() => {
+            const i = PCL.$('#searchInput');
+            if (i) i.value = q;
+          });
+        }
       }
-      PCL.render().then(() => {
-        const i = PCL.$('#searchInput');
-        if (i) i.value = q;
-      });
     };
 
     PCL.$$('[data-cfsrc]', root).forEach((el) =>
       el.addEventListener('click', () => {
         pd.modSource = el.dataset.cfsrc;
         pd.modSearch = null;
+        pd.modSearchLoading = false;
         pd.modSearchError = '';
+        pd.modSearchAuto = !!String(pd[meta.queryKey] || '').trim() && (el.dataset.cfsrc !== 'curseforge' || hasCfKey());
         PCL.render();
       })
     );
@@ -6322,9 +6413,9 @@ window.Icons = (() => {
         btn.disabled = true;
         btn.textContent = '下载中…';
         const kind = meta.type;
-        const source = tab === 'mod' ? (pd.modSource || 'modrinth') : 'modrinth';
+        const src = source();
         try {
-          const r = source === 'curseforge'
+          const r = src === 'curseforge'
             ? await API.curseforge.install({
                 projectId: btn.dataset.install,
                 fileId: btn.dataset.file,
@@ -6353,6 +6444,13 @@ window.Icons = (() => {
         }
       })
     );
+
+    if (pd[meta.key + 'Auto']) {
+      pd[meta.key + 'Auto'] = false;
+      setTimeout(doSearch, 0);
+    } else if (!String(pd[meta.queryKey] || '').trim() && !pd[meta.key] && !pd[meta.key + 'Error'] && !pd[meta.key + 'Loading']) {
+      loadHotContent(state, tab);
+    }
   }
 
   /* ---------------------- 整合包 ---------------------- */
@@ -6360,6 +6458,11 @@ window.Icons = (() => {
     const pd = state.pageData;
     const res = pd.packSearch;
     const source = pd.packSource || 'modrinth';
+    const query = String(pd.packQuery || '').trim();
+    const loading = !!pd.packLoading;
+    const isHot = !query;
+    const hasCfKey = !!(state.settings && state.settings.curseForgeApiKey && String(state.settings.curseForgeApiKey).trim());
+    const curseKeyless = source === 'curseforge' && !hasCfKey;
     const cards =
       res && res.hits
         ? res.hits
@@ -6379,11 +6482,21 @@ window.Icons = (() => {
             .join('')
         : '';
 
+    const errorBody = pd.packError
+      ? `<div class="empty" style="color:var(--danger)">${curseKeyless && isHot ? 'CurseForge 免 Key 不能浏览热门整合包，请输入精确项目名或项目链接。' : `搜索失败：${PCL.esc(pd.packError)}`}<div style="margin-top:10px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap">${curseKeyless && isHot ? '<button class="btn small primary" data-pksrc="modrinth">查看 Modrinth 热门</button>' : ''}<button class="btn small" data-retry>重试</button></div></div>`
+      : loading
+        ? `<div class="empty">正在加载${isHot ? '热门整合包' : '搜索结果'}…</div>`
+        : res
+          ? cards
+            ? `<div class="result-grid">${cards}</div>`
+            : `<div class="empty">${isHot ? '暂时没有可用的热门整合包，检查网络后重试' : '没有找到相关整合包'}</div>`
+          : `<div class="empty">${query ? '点击“搜索”获取结果' : '正在加载热门整合包…'}</div>`;
+
     return `
     <div class="dl-head">
       <div>
-        <div class="title">整合包</div>
-        <div class="desc">支持 Modrinth (.mrpack) 与 CurseForge (.zip) 整合包：自动安装基础版本、下载全部 Mod 并写入覆盖配置。</div>
+        <div class="title">整合包${isHot ? '<span class="hot-chip">热门</span>' : ''}</div>
+        <div class="desc">默认按下载量展示热门整合包；支持 Modrinth (.mrpack) 与 CurseForge (.zip)，自动安装基础版本、下载全部 Mod 并写入覆盖配置。</div>
       </div>
       <button class="btn" id="btnLocalPack">${Icons.folder}安装本地整合包</button>
     </div>
@@ -6396,56 +6509,111 @@ window.Icons = (() => {
     <div class="pack-banner">
       <div class="mt-icon" style="width:40px;height:40px;border-radius:8px;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent)">${Icons.package}</div>
       <div class="grow">
-        <div class="bold">从 ${source === 'curseforge' ? 'CurseForge' : 'Modrinth'} 安装整合包</div>
+        <div class="bold">${isHot ? '热门整合包 · 按下载量排序' : `从 ${source === 'curseforge' ? 'CurseForge' : 'Modrinth'} 安装整合包`}</div>
         <div class="tiny muted" style="margin-top:3px">整合包会安装为独立版本，不会影响已有存档与 Mod。</div>
       </div>
     </div>
     <div class="search-bar">
-      <input class="input" id="packInput" placeholder="搜索整合包，例如 fabulously optimized…" value="${PCL.esc(pd.packQuery || '')}" />
-      <button class="btn primary" id="btnPackSearch">${Icons.search}搜索</button>
+      <input class="input" id="packInput" placeholder="搜索整合包，例如 fabulously optimized；留空查看热门…" value="${PCL.esc(query)}" />
+      <button class="btn primary" id="btnPackSearch">${Icons.search}${isHot ? '刷新热门' : '搜索'}</button>
     </div>
-    ${
-      pd.packError
-        ? `<div class="empty" style="color:var(--danger)">搜索失败：${PCL.esc(pd.packError)}<div class="tiny muted mt-8">请检查网络后重新搜索</div></div>`
-        : res
-          ? cards
-            ? `<div class="result-grid">${cards}</div>`
-            : '<div class="empty">没有找到相关整合包</div>'
-          : '<div class="empty">输入关键词后点击搜索</div>'
-    }`;
+    ${errorBody}`;
+  }
+
+  async function loadPackHot(state) {
+    const pd = state.pageData;
+    if (String(pd.packQuery || '').trim() || pd.packSearch || pd.packLoading) return;
+    const source = pd.packSource || 'modrinth';
+    const hasCfKey = !!(state.settings && state.settings.curseForgeApiKey && String(state.settings.curseForgeApiKey).trim());
+    if (source === 'curseforge' && !hasCfKey) {
+      pd.packSearch = null;
+      pd.packError = 'CurseForge 免 Key 不能浏览热门整合包，只支持精确项目名或链接搜索。';
+      PCL.render();
+      return;
+    }
+    const token = (pd.packToken || 0) + 1;
+    pd.packToken = token;
+    pd.packLoading = true;
+    pd.packError = '';
+    try {
+      if (source === 'curseforge') {
+        const r = await API.curseforge.search({ query: '', kind: 'modpack', gameVersion: gameVersionOfCurrent(state), loader: loaderOfCurrent(state) });
+        if (r && r.ok === false) throw new Error(r.error || 'CurseForge 热门整合包加载失败');
+        if (pd.packToken !== token) return;
+        pd.packSearch = { hits: r.hits || [], total: r.total || 0 };
+      } else {
+        const r = await API.modrinth.search({ query: '', type: 'modpack', limit: 12, sort: 'downloads' });
+        if (pd.packToken !== token) return;
+        pd.packSearch = r;
+      }
+    } catch (e) {
+      if (pd.packToken !== token) return;
+      pd.packSearch = null;
+      pd.packError = String(e.message || e).replace(/^Error invoking remote method .*?: /, '');
+    } finally {
+      if (pd.packToken === token) {
+        pd.packLoading = false;
+        PCL.render();
+      }
+    }
   }
 
   function mountPack(root, state) {
     const pd = state.pageData;
-    const source = pd.packSource || 'modrinth';
+    const source = () => (pd.packSource || 'modrinth');
+    const hasCfKey = () => !!(state.settings && state.settings.curseForgeApiKey && String(state.settings.curseForgeApiKey).trim());
     const input = PCL.$('#packInput', root);
     const search = async () => {
-      pd.packQuery = input.value.trim();
+      const q = input.value.trim();
+      pd.packQuery = q;
       pd.packError = '';
+      const btn = PCL.$('#btnPackSearch', root);
+      if (btn) {
+        btn.disabled = true;
+        btn.textContent = '搜索中…';
+      }
+      const token = (pd.packToken || 0) + 1;
+      pd.packToken = token;
+      pd.packLoading = true;
       try {
-        if (source === 'curseforge') {
-          const r = await API.curseforge.search({ query: pd.packQuery, kind: 'modpack', gameVersion: gameVersionOfCurrent(state), loader: loaderOfCurrent(state) });
+        if (source() === 'curseforge') {
+          if (!q && !hasCfKey()) throw new Error('CurseForge 免 Key 不能浏览热门整合包，请输入精确项目名或项目链接');
+          const r = await API.curseforge.search({ query: q, kind: 'modpack', gameVersion: gameVersionOfCurrent(state), loader: loaderOfCurrent(state) });
           if (r && r.ok === false) throw new Error(r.error || 'CurseForge 搜索失败');
+          if (pd.packToken !== token) return;
           pd.packSearch = { hits: r.hits || [], total: r.total || 0 };
         } else {
-          pd.packSearch = await API.modrinth.search({ query: pd.packQuery, type: 'modpack', limit: 12 });
+          pd.packSearch = await API.modrinth.search({ query: q, type: 'modpack', limit: 12, sort: q ? 'relevance' : 'downloads' });
+          if (pd.packToken !== token) return;
         }
+        pd.packError = '';
       } catch (e) {
+        if (pd.packToken !== token) return;
         pd.packError = String(e.message || e).replace(/^Error invoking remote method .*?: /, '');
         pd.packSearch = null;
         PCL.toast('整合包搜索失败：' + pd.packError, 'error', 4500);
+      } finally {
+        if (pd.packToken === token) {
+          pd.packLoading = false;
+          PCL.render().then(() => {
+            const i = PCL.$('#packInput');
+            if (i) i.value = q;
+          });
+        }
       }
-      PCL.render();
     };
     PCL.$$('[data-pksrc]', root).forEach((el) =>
       el.addEventListener('click', () => {
         pd.packSource = el.dataset.pksrc;
         pd.packSearch = null;
+        pd.packLoading = false;
         pd.packError = '';
+        pd.packAuto = !!String(pd.packQuery || '').trim() && (el.dataset.pksrc !== 'curseforge' || hasCfKey());
         PCL.render();
       })
     );
     PCL.$('#btnPackSearch', root)?.addEventListener('click', search);
+    PCL.$('[data-retry]', root)?.addEventListener('click', search);
     input?.addEventListener('keydown', (e) => e.key === 'Enter' && search());
 
     PCL.$('#btnLocalPack', root)?.addEventListener('click', async () => {
@@ -6472,7 +6640,7 @@ window.Icons = (() => {
         btn.textContent = '安装中…';
         try {
           // 这里必须安装整个整合包，而不是把 .mrpack 当 Mod 丢进 mods 文件夹
-          const r = source === 'curseforge'
+          const r = source() === 'curseforge'
             ? await API.curseforge.installPackProject({
                 projectId: btn.dataset.install,
                 fileId: btn.dataset.file,
@@ -6497,6 +6665,13 @@ window.Icons = (() => {
         }
       })
     );
+
+    if (pd.packAuto) {
+      pd.packAuto = false;
+      setTimeout(search, 0);
+    } else if (!String(pd.packQuery || '').trim() && !pd.packSearch && !pd.packError && !pd.packLoading) {
+      loadPackHot(state);
+    }
   }
 
   /* ---------------------- 游戏版本选择器（全部版本） ---------------------- */

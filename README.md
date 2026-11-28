@@ -15,8 +15,8 @@
 [![Stars](https://img.shields.io/github/stars/ACMagnus/StartPro-Launcher?style=flat-square&color=ffb000&label=stars)](https://github.com/ACMagnus/StartPro-Launcher)
 [![Platform](https://img.shields.io/badge/platform-Windows%2010%2F11%20x64-4a9be0?style=flat-square)](#下载)
 
-[**下载 Windows 完整包**](https://aka.doubaocdn.com/s/gmuEjDKIWa) ·
-[**下载源码**](https://aka.doubaocdn.com/s/ZpLDU5XB1j) ·
+[**下载 Windows 完整包**](https://aka.doubaocdn.com/s/0oqQSQDVtN) ·
+[**下载源码**](https://aka.doubaocdn.com/s/S96UBJVZa6) ·
 [**官方网站**](https://acmagnus.github.io/StartPro-Launcher/) ·
 [**问题反馈**](https://github.com/ACMagnus/StartPro-Launcher/issues) ·
 [**讨论区**](https://github.com/ACMagnus/StartPro-Launcher/discussions)
@@ -32,6 +32,7 @@ StartPro Launcher（SPL）不是只画了一层启动器外壳。它的下载、
 - **真实下载**：版本清单优先走 BMCLAPI，失败自动回退 Mojang 官方源。
 - **加载器齐全**：原版、Forge、NeoForge、Fabric、Quilt、OptiFine。
 - **资源生态**：Modrinth 全量搜索，CurseForge 支持官方 Key 与免 Key 两种模式。
+- **热门推荐**：下载页的 Mod / 整合包 / 数据包 / 资源包 / 光影包进入即按下载量展示热门内容，不需要先输入关键词。
 - **自动找 Java**：启动时扫描 PATH、JAVA_HOME、注册表、官方启动器 runtime 和 PCL / HMCL / Prism 等启动器自带 Java；自动选最高版本，设置页可手动重扫。
 - **自动更新**：启动后自动检查新版本，一键下载、SHA-256 校验、退出替换并重新打开；配置和存档不受影响。
 - **在线 AI**：小助手可接 DeepSeek、OpenAI、Ollama 或任意 OpenAI 兼容接口，回复流式逐字显示，并自动带上当前版本、Java、镜像和最近日志。
@@ -53,15 +54,19 @@ StartPro Launcher（SPL）不是只画了一层启动器外壳。它的下载、
 | --- | --- |
 | ![内置 AI](screenshots/settings-ai.webp) | ![Java 自动查找](screenshots/java-auto.webp) |
 
+| 热门推荐 |
+| --- |
+| ![热门推荐](screenshots/hot.webp) |
+
 ## 下载
 
-当前版本：**1.2.1 · Java 自动查找构建**
+当前版本：**1.2.1 · 热门推荐构建**
 
 | 文件 | 说明 |
 | --- | --- |
-| [StartPro-Launcher-1.2.1-java-auto.zip](https://aka.doubaocdn.com/s/gmuEjDKIWa) | Windows 完整包，约 103 MB，内置 Electron，**不需要 Node.js**；已加入 Java 自动查找 |
-| [StartPro-Launcher-1.2.1-source.zip](https://aka.doubaocdn.com/s/ZpLDU5XB1j) | 源码包；仓库 [`source/`](source/) 目录同样保留完整源码 |
-| [SHA256SUMS.txt](https://aka.doubaocdn.com/s/p7DkmxAyjQ) | 两个包的 SHA-256 校验值 |
+| [StartPro-Launcher-1.2.1-hot.zip](https://aka.doubaocdn.com/s/0oqQSQDVtN) | Windows 完整包，约 103 MB，内置 Electron，**不需要 Node.js**；已加入热门推荐与 Java 自动查找 |
+| [StartPro-Launcher-1.2.1-source.zip](https://aka.doubaocdn.com/s/S96UBJVZa6) | 源码包；仓库 [`source/`](source/) 目录同样保留完整源码 |
+| [SHA256SUMS.txt](https://aka.doubaocdn.com/s/VV1nIX1kg5) | 两个包的 SHA-256 校验值 |
 | [官网](https://acmagnus.github.io/StartPro-Launcher/) | 在线介绍与下载页 |
 
 ### 快速开始
@@ -71,7 +76,7 @@ StartPro Launcher（SPL）不是只画了一层启动器外壳。它的下载、
 3. 首次启动会创建配置目录 `%APPDATA%\StartPro Launcher`，不会接管你现有的 `.minecraft`。
 4. 在「设置 → 游戏 → 游戏目录」切换到自己的 `.minecraft`，或直接安装一个新版本。
 
-下载后可用 `certutil -hashfile StartPro-Launcher-1.2.1-java-auto.zip SHA256` 对照 [SHA256SUMS.txt](https://aka.doubaocdn.com/s/p7DkmxAyjQ)。
+下载后可用 `certutil -hashfile StartPro-Launcher-1.2.1-hot.zip SHA256` 对照 [SHA256SUMS.txt](https://aka.doubaocdn.com/s/VV1nIX1kg5)。
 
 ## 内置 AI 怎么用
 
