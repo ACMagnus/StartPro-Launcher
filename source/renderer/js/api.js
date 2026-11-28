@@ -22,6 +22,8 @@
 
   const DEFAULT_SETTINGS = {
     gameDir: '/home/user/.minecraft',
+    gameFolders: ['/home/user/.minecraft'],
+    starredVersions: [],
     javaPath: '/usr/lib/jvm/java-17-openjdk/bin/java',
     maxMemory: 4096,
     defaultMemory: 8192,
@@ -121,7 +123,7 @@
       title: '内测提示',
       tag: '公告',
       date: '2026-11-21',
-      body: '这是 Plain Craft Launcher 2 的开源复刻实现：界面按 PCL2 布局还原，底层为真实的 Mojang 下载与启动流程，支持原版、Fabric、Modrinth Mod 与 .mrpack 整合包。'
+      body: '这是 Plain Craft Launcher 2 的第三方独立实现：界面与版本选择逻辑参考 PCL2（作者龙腾猫跃），底层为真实的 Mojang 下载与启动流程，支持原版、Fabric、Modrinth Mod 与 .mrpack 整合包。'
     },
     {
       id: 'n2',
@@ -163,6 +165,32 @@
     return { ok: true, taskId };
   }
 
+  const folderName = (p) => {
+    const parts = String(p || '').split(/[\\/]/).filter(Boolean);
+    if (!parts.length) return String(p || '');
+    const base = parts[parts.length - 1];
+    if (base === '.minecraft') {
+      const parent = parts[parts.length - 2] || '';
+      const grand = parts[parts.length - 3] || '';
+      if (!parent || /roaming/i.test(parent) || /^(home|users)$/i.test(grand)) return '官方启动器文件夹';
+      return parent;
+    }
+    return base;
+  };
+
+  function mockFolders() {
+    const paths = Array.isArray(settings.gameFolders) && settings.gameFolders.length
+      ? settings.gameFolders
+      : [settings.gameDir].filter(Boolean);
+    return paths.map((p) => ({ path: p, name: folderName(p), active: p === settings.gameDir, exists: true }));
+  }
+
+  function saveMockSettings(patch) {
+    settings = { ...settings, ...(patch || {}) };
+    try { localStorage.setItem(LS_KEY, JSON.stringify(settings)); } catch (e) {}
+    return settings;
+  }
+
   window.API = {
     isElectron: false,
     platform: 'linux',
@@ -175,9 +203,34 @@
     settings: {
       get: async () => ({ ...settings, accounts }),
       set: async (patch) => {
-        settings = { ...settings, ...patch };
+        const p = { ...(patch || {}) };
+        if (p.gameDir) {
+          const list = Array.isArray(settings.gameFolders) ? settings.gameFolders : [];
+          p.gameFolders = [...new Set([p.gameDir, ...list])];
+        }
+        settings = { ...settings, ...p };
         try { localStorage.setItem(LS_KEY, JSON.stringify(settings)); } catch (e) {}
         return settings;
+      }
+    },
+    folders: {
+      list: async () => mockFolders(),
+      add: async () => ({ ok: false, error: '浏览器预览不能访问本地文件夹' }),
+      create: async () => ({ ok: false, error: '浏览器预览不能创建文件夹' }),
+      switch: async (p) => {
+        const paths = Array.isArray(settings.gameFolders) && settings.gameFolders.length
+          ? settings.gameFolders
+          : [settings.gameDir].filter(Boolean);
+        if (!paths.includes(p)) throw new Error('该文件夹不在列表中');
+        saveMockSettings({ gameDir: p, version: '' });
+        return { ok: true, path: p, folders: mockFolders() };
+      },
+      remove: async (p) => {
+        const paths = (settings.gameFolders || []).filter((x) => x !== p);
+        if (paths.length < 1) throw new Error('至少要保留一个游戏文件夹');
+        const switched = settings.gameDir === p;
+        saveMockSettings({ gameFolders: paths, gameDir: switched ? paths[0] : settings.gameDir, version: switched ? '' : settings.version });
+        return { ok: true, switched, active: settings.gameDir, folders: mockFolders() };
       }
     },
     diagnostics: {

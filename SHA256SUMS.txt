@@ -1,0 +1,2 @@
+91d5e54ae1416454b87ba3e0a9e12c2ba354396240c4c251bcdcf33413a99cb5  StartPro-Launcher-1.2.1-java-auto.zip
+890a358477fdf63b3c35e2a74e19b0e65544d6b9163f919126b5856915134408  StartPro-Launcher-1.2.1-source.zip

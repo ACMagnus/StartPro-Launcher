@@ -1,7 +1,7 @@
 {
   "version": "1.2.1",
-  "notes": "修复自动更新在非首页或弹窗打开时永久跳过；AI 回复改为流式逐字显示，启动时预加载版本信息，设置页修改 AI/Java/内存不再重复加载背景、皮肤和音乐。1.2.0 的在线 AI 能力保留。作者：竹下一刀魂。",
-  "url": "https://github.com/ACMagnus/StartPro-Launcher/releases/download/v1.2.1/StartPro-Launcher-1.2.1-bat.zip",
-  "sha256": "ba798c1fab653980c7030eebaef35e834d97aef0849d3ccf13280aa23826d3c6",
-  "publishedAt": "2026-11-23"
+  "notes": "新增 PCL2 风格版本选择整页；启动时自动扫描本机已有 Java（PATH、JAVA_HOME、注册表、官方启动器 runtime、PCL / HMCL / Prism 等启动器自带 Java），设置页可手动重扫；Java 版本匹配收紧，避免拿过新 Java 启动旧版本；关于页加入 PCL2 鸣谢。1.2.0 在线 AI 与自动更新修复保留。",
+  "url": "https://aka.doubaocdn.com/s/gmuEjDKIWa",
+  "sha256": "91d5e54ae1416454b87ba3e0a9e12c2ba354396240c4c251bcdcf33413a99cb5",
+  "publishedAt": "2026-11-28"
 }

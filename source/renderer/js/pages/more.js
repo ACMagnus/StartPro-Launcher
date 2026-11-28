@@ -109,6 +109,16 @@
         body = `
           <div class="card more-card">
             <div class="card-title">关于</div>
+            <div style="margin-bottom:12px;padding:12px 14px;border:1px solid #d8e6fa;border-radius:6px;background:#f5f9ff">
+              <div style="font-size:13px;font-weight:700;color:#1f5fa8">特别鸣谢 · Plain Craft Launcher 2</div>
+              <div class="tiny muted mt-6" style="line-height:1.8">
+                版本选择页的页面结构、版本分组规则、文件夹菜单与交互细节参考自 PCL2 公开源码；PCL2 作者为龙腾猫跃（LTCat）。
+              </div>
+              <div style="display:flex;gap:8px;margin-top:9px">
+                <button class="btn small outline" data-open-url="https://github.com/Meloong-Git/PCL">PCL2 项目</button>
+                <button class="btn small outline" data-open-url="https://meloong.com/afd/a/LTCat">赞助龙腾猫跃</button>
+              </div>
+            </div>
             <div class="kv">
               <span class="k">启动器</span><span class="v">StartPro Launcher（SPL）· Minecraft 启动器 v${PCL.esc(info.version || '1.0.0')}</span>
               <span class="k">作者</span><span class="v">竹下一刀魂</span>
@@ -117,13 +127,15 @@
               <span class="k">物理内存</span><span class="v">${info.totalMem ? (info.totalMem / 1024).toFixed(1) + ' GB' : '—'}</span>
             </div>
             <div class="tiny muted mt-12" style="line-height:1.9">
-              StartPro 是对 PCL2 界面的独立复刻实现，与龙腾猫跃及 PCL2 官方无关，不含其任何代码或素材。<br/>
-              感谢 PCL2 作者龙腾猫跃、Electron、Minecraft 与 Modrinth 社区。
+              StartPro 是第三方独立实现，不是 PCL2 官方版本，与龙腾猫跃及 PCL2 官方无隶属关系。<br/>
+              界面布局、分组规则与交互逻辑参考自 Plain Craft Launcher 2 的公开源码；PCL2 版权归龙腾猫跃所有，按《PCL 分发有限许可》发布，许可与署名说明见项目根目录 THIRD_PARTY_NOTICES.md。<br/>
+              Minecraft 是 Mojang Studios 的商标，本项目与 Mojang 无关联，请使用正版游戏。
             </div>
           </div>
           <div class="card more-card mt-10">
             <div class="card-title">鸣谢</div>
-            <div class="help-row"><span class="help-ico grass">${Icons.star}</span><div class="help-main"><div class="help-title">龙腾猫跃</div><div class="help-desc">PCL2 原作者，界面与交互设计的来源</div></div></div>
+            <div class="help-row" style="cursor:pointer" data-open-url="https://github.com/Meloong-Git/PCL"><span class="help-ico grass">${Icons.star}</span><div class="help-main"><div class="help-title">龙腾猫跃 · Plain Craft Launcher 2</div><div class="help-desc">PCL2 作者；版本选择页的结构、分组与交互参考来源</div></div><span class="help-go">${Icons.link || Icons.chevron}</span></div>
+            <div class="help-row" style="cursor:pointer" data-open-url="https://meloong.com/afd/a/LTCat"><span class="help-ico faq">¥</span><div class="help-main"><div class="help-title">赞助 PCL2 作者</div><div class="help-desc">如果 PCL2 帮到了你，可以通过爱发电支持龙腾猫跃</div></div><span class="help-go">${Icons.link || Icons.chevron}</span></div>
             <div class="help-row"><span class="help-ico stone">${Icons.box}</span><div class="help-main"><div class="help-title">Mojang Studios</div><div class="help-desc">Minecraft 与官方版本清单</div></div></div>
           </div>`;
       } else {
@@ -180,6 +192,13 @@
 
       PCL.$$('[data-ai-open]', root).forEach((el) =>
         el.addEventListener('click', () => PCL.assistant && PCL.assistant.open())
+      );
+
+      PCL.$$('[data-open-url]', root).forEach((el) =>
+        el.addEventListener('click', (e) => {
+          e.preventDefault();
+          API.openExternal(el.dataset.openUrl);
+        })
       );
 
       PCL.$$('[data-guide]', root).forEach((el) =>

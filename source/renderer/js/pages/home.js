@@ -84,12 +84,8 @@
         ? ''
         : `<div class="home-actions">
              <button class="btn ${ver ? '' : 'primary'} home-pick" id="btnPickVersion">版本选择</button>
-             ${ver ? '<button class="btn home-dots" id="btnVersionMore" title="更多">…</button>' : ''}
-           </div>
-           ${ver ? `<div class="home-vermenu" id="homeVerMenu" hidden>
-             <div class="hvm-item" data-vm="settings">版本设置</div>
-             <div class="hvm-item" data-vm="folder">打开版本目录</div>
-           </div>` : ''}`;
+             <button class="btn" id="btnVersionSettings" ${ver ? '' : 'disabled'}>版本设置</button>
+           </div>`;
 
       const news = state.news && state.news[0]
         ? `<div class="card home-notice" id="homeNotice">
@@ -208,23 +204,18 @@
         });
 
       const pick = PCL.$('#btnPickVersion', root);
-      if (pick) pick.addEventListener('click', () => versionPickerModal());
-
-      const more = PCL.$('#btnVersionMore', root);
-      if (more) {
-        const menu = PCL.$('#homeVerMenu', root);
-        more.addEventListener('click', (e) => {
-          e.stopPropagation();
-          menu.hidden = !menu.hidden;
+      if (pick)
+        pick.addEventListener('click', () => {
+          state.pageData.versionKeyword = '';
+          PCL.go('select');
         });
-        PCL.$$('[data-vm]', root).forEach((el) =>
-          el.addEventListener('click', () => {
-            menu.hidden = true;
-            if (el.dataset.vm === 'settings') PCL.go('version', { id: state.settings.version });
-            else API.versions.open(state.settings.version);
-          })
-        );
-      }
+
+      const versionSettings = PCL.$('#btnVersionSettings', root);
+      if (versionSettings)
+        versionSettings.addEventListener('click', () => {
+          if (!state.settings.version) return;
+          PCL.go('version', { id: state.settings.version });
+        });
 
       const stopGame = () =>
         PCL.confirm(
@@ -396,47 +387,5 @@
     return m;
   }
 
-  /* ---------------------- 版本选择弹窗 ---------------------- */
-  function versionPickerModal() {
-    const state = PCL.state;
-    const versions = state.versions;
-    const body =
-      versions.length === 0
-        ? `<div class="empty">还没有安装任何版本<br/><span class="tiny">前往「下载」页安装一个版本</span></div>`
-        : versions
-            .map(
-              (v) => `<div class="row" data-id="${PCL.esc(v.id)}" style="cursor:pointer;padding:8px 6px">
-              ${PCL.blockIcon(PCL.blockKind(v), "sm")}
-              <div class="row-main">
-                <div class="row-title">${PCL.esc(v.id)}</div>
-                <div class="row-desc">${v.loader || '原版'} · 最近使用 ${PCL.fmtTime(v.lastUsed)}</div>
-              </div>
-              ${v.id === state.settings.version ? '<span class="tag">当前</span>' : ''}
-            </div>`
-            )
-            .join('');
-
-    PCL.modal({
-      title: '版本选择',
-      width: 480,
-      body: `<div style="max-height:420px">${body}</div>`,
-      footer: `<button class="btn" data-close>关闭</button><button class="btn primary" id="goDownload">安装新版本</button>`,
-      onMount: (wrap, close) => {
-        PCL.$$('[data-id]', wrap).forEach((row) =>
-          row.addEventListener('click', async () => {
-            await PCL.saveSettings({ version: row.dataset.id });
-            close();
-            PCL.render();
-          })
-        );
-        wrap.querySelector('#goDownload').addEventListener('click', () => {
-          close();
-          PCL.go('download');
-        });
-      },
-    });
-  }
-
   PCL.addAccountModal = addAccountModal;
-  PCL.versionPickerModal = versionPickerModal;
 })();

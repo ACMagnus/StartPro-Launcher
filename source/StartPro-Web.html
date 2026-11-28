@@ -1285,6 +1285,604 @@ body[data-page="version"] .view { padding: 0; display: flex; }
   opacity: 1;
 }
 
+/* ============================ 版本选择（PCL2 风格） ============================ */
+.vsel-side {
+  flex: 0 0 266px;
+  min-width: 0;
+  padding: 16px 12px 18px;
+  background: #fff;
+  border-right: 1px solid #e2ebf5;
+  box-shadow: 1px 0 3px rgba(46, 82, 126, 0.04);
+  overflow-y: auto;
+}
+
+.vsel-side-label {
+  padding: 0 8px;
+  margin: 14px 0 6px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 11px;
+  color: var(--text-3);
+}
+
+.vsel-side-count {
+  min-width: 17px;
+  padding: 1px 5px;
+  border-radius: 9px;
+  background: #f0f5fb;
+  color: var(--text-3);
+  font-size: 9.5px;
+  line-height: 1.3;
+  text-align: center;
+}
+
+.vsel-side-label:first-child {
+  margin-top: 0;
+}
+
+.vsel-folder-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.vsel-folder {
+  position: relative;
+  width: 100%;
+  min-height: 52px;
+  padding: 8px 25px 8px 9px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text-2);
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+  outline: none;
+}
+
+.vsel-folder:hover,
+.vsel-folder:focus-visible {
+  background: #f5f9fe;
+}
+
+.vsel-folder.active {
+  background: #eaf3ff;
+  border-color: #bed9f8;
+  color: var(--accent);
+}
+
+.vsel-folder-icon {
+  width: 30px;
+  height: 30px;
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  border-radius: 5px;
+  color: var(--accent);
+  background: #fff;
+  border: 1px solid #d8e7f8;
+}
+
+.vsel-folder-icon svg {
+  width: 17px;
+  height: 17px;
+}
+
+.vsel-folder-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.vsel-folder-main b {
+  font-size: 12.5px;
+  color: var(--text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.vsel-folder-main i {
+  font-style: normal;
+  font-size: 10.5px;
+  color: var(--text-3);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  direction: ltr;
+  text-align: left;
+}
+
+.vsel-folder-dot {
+  width: 6px;
+  height: 6px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 3px rgba(26, 111, 212, 0.12);
+  transition: opacity 0.12s ease;
+}
+
+.vsel-folder-remove {
+  position: absolute;
+  right: 6px;
+  top: 50%;
+  width: 17px;
+  height: 17px;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  transform: translateY(-50%);
+  border: 0;
+  border-radius: 50%;
+  background: #fceceb;
+  color: #b54945;
+  font: 13px/1 var(--font);
+  opacity: 0;
+  cursor: pointer;
+  transition: opacity 0.12s ease;
+}
+
+.vsel-folder:hover .vsel-folder-remove,
+.vsel-folder:focus-within .vsel-folder-remove {
+  opacity: 1;
+}
+
+.vsel-folder:hover .vsel-folder-dot,
+.vsel-folder:focus-within .vsel-folder-dot {
+  opacity: 0;
+}
+
+.vsel-side-item {
+  width: 100%;
+  height: 32px;
+  padding: 0 9px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  border: 1px solid transparent;
+  border-radius: 5px;
+  background: transparent;
+  color: var(--text-2);
+  font: 12.5px/1 var(--font);
+  text-align: left;
+  cursor: pointer;
+}
+
+.vsel-side-item svg {
+  width: 15px;
+  height: 15px;
+  opacity: 0.7;
+}
+
+.vsel-side-item:hover {
+  background: #f5f9fe;
+  color: var(--accent);
+}
+
+.vsel-side-note {
+  margin: 18px 8px 0;
+  padding-top: 12px;
+  border-top: 1px dashed #e6edf6;
+  color: var(--text-3);
+  font-size: 10.5px;
+  line-height: 1.75;
+}
+
+.vsel-grow {
+  padding: 18px 22px;
+  background: linear-gradient(180deg, rgba(238, 247, 255, 0.92), rgba(224, 238, 253, 0.8));
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.vsel-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 14px;
+}
+
+.vsel-head-main {
+  min-width: 0;
+}
+
+.vsel-title-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.vsel-back {
+  width: 25px;
+  height: 25px;
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 5px;
+  background: transparent;
+  color: var(--text-2);
+  cursor: pointer;
+}
+
+.vsel-back:hover {
+  background: rgba(255, 255, 255, 0.75);
+  color: var(--accent);
+}
+
+.vsel-back svg {
+  width: 16px;
+  height: 16px;
+}
+
+.vsel-title {
+  margin: 0;
+  font-size: 22px;
+  line-height: 1.1;
+  font-weight: 800;
+  letter-spacing: 0;
+  color: var(--text);
+}
+
+.vsel-sub {
+  margin: 5px 0 0 31px;
+  font-size: 11.5px;
+  color: var(--text-3);
+}
+
+.vsel-tools {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  flex: 0 1 290px;
+  padding-top: 4px;
+}
+
+.vsel-search {
+  flex: 1;
+  min-width: 0;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 8px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  color: var(--text-3);
+}
+
+.vsel-search svg {
+  width: 14px;
+  height: 14px;
+  flex: 0 0 auto;
+}
+
+.vsel-search input {
+  width: 100%;
+  min-width: 0;
+  height: 28px;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--text);
+  font: 12.5px var(--font);
+}
+
+.vsel-refresh {
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  background: #fff;
+  color: var(--text-2);
+  cursor: pointer;
+}
+
+.vsel-refresh:hover {
+  border-color: var(--accent-border);
+  color: var(--accent);
+}
+
+.vsel-refresh svg {
+  width: 15px;
+  height: 15px;
+}
+
+.vsel-list {
+  flex: 0 0 auto;
+  min-height: 0;
+}
+
+.vsel-card {
+  background: #fff;
+  border: 1px solid #dce8f5;
+  border-radius: 7px;
+  box-shadow: 0 1px 3px rgba(46, 82, 126, 0.05);
+  overflow: hidden;
+  margin-bottom: 11px;
+}
+
+.vsel-card-head {
+  width: 100%;
+  min-height: 37px;
+  padding: 0 12px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  border: 0;
+  border-bottom: 1px solid transparent;
+  background: #fff;
+  color: var(--text);
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.vsel-card-head:hover {
+  background: #f8fbff;
+}
+
+.vsel-card[data-card] .vsel-card-head[aria-expanded="true"] {
+  border-bottom-color: #edf3fa;
+}
+
+.vsel-card-title {
+  font-size: 12.5px;
+  font-weight: 800;
+}
+
+.vsel-card-count {
+  min-width: 18px;
+  padding: 1px 5px;
+  border-radius: 10px;
+  background: #f0f5fb;
+  color: var(--text-3);
+  font-size: 10.5px;
+  text-align: center;
+}
+
+.vsel-card-chev {
+  margin-left: auto;
+  display: grid;
+  place-items: center;
+  color: var(--text-3);
+  transform: rotate(90deg);
+  transition: transform 0.16s ease;
+}
+
+.vsel-card-chev.open {
+  transform: rotate(-90deg);
+}
+
+.vsel-card-chev svg {
+  width: 14px;
+  height: 14px;
+}
+
+.vsel-rows {
+  padding: 0 8px 6px;
+}
+
+.vsel-row {
+  min-height: 52px;
+  padding: 7px 8px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  border-radius: 5px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  outline: none;
+}
+
+.vsel-row + .vsel-row {
+  border-top: 1px solid #f0f5fb;
+}
+
+.vsel-row:hover,
+.vsel-row:focus-visible {
+  background: #f5faff;
+  border-color: #e3effc;
+}
+
+.vsel-row.current {
+  background: #edf6ff;
+  border-color: #c5e0fb;
+}
+
+.vsel-icon {
+  width: 32px;
+  height: 32px;
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+}
+
+.vsel-icon .block-icon {
+  width: 30px;
+  height: 30px;
+}
+
+.vsel-row-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.vsel-row-name {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text);
+  font-size: 12.5px;
+  font-weight: 700;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.vsel-current {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 2px 5px;
+  border: 1px solid #b7d9f9;
+  border-radius: 4px;
+  background: #fff;
+  color: var(--accent);
+  font-size: 9.5px;
+  font-weight: 500;
+}
+
+.vsel-current svg {
+  width: 10px;
+  height: 10px;
+}
+
+.vsel-row-sub {
+  margin-top: 3px;
+  color: var(--text-3);
+  font-size: 10.5px;
+  line-height: 1.45;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.vsel-row-actions {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  opacity: 0.55;
+  transition: opacity 0.15s ease;
+}
+
+.vsel-row:hover .vsel-row-actions,
+.vsel-row:focus-visible .vsel-row-actions {
+  opacity: 1;
+}
+
+.vsel-pick {
+  margin-right: 4px;
+  padding: 2px 7px;
+  border: 1px solid #cfe3f7;
+  border-radius: 4px;
+  color: var(--accent);
+  background: #fff;
+  font-size: 10px;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+.vsel-row:hover .vsel-pick,
+.vsel-row:focus-visible .vsel-pick {
+  opacity: 1;
+}
+
+.vsel-act {
+  width: 25px;
+  height: 25px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--text-3);
+  cursor: pointer;
+}
+
+.vsel-act:hover {
+  background: #fff;
+  color: var(--accent);
+  box-shadow: 0 1px 3px rgba(30, 70, 120, 0.08);
+}
+
+.vsel-act.danger:hover {
+  color: var(--danger);
+}
+
+.vsel-act svg {
+  width: 14px;
+  height: 14px;
+}
+
+.vsel-foot {
+  margin-top: auto;
+  padding-top: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  color: var(--text-3);
+  font-size: 10.5px;
+}
+
+.vsel-foot .btn {
+  height: 30px;
+  padding: 0 12px;
+  font-size: 12px;
+}
+
+.vsel-empty {
+  padding: 38px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.vsel-empty-icon {
+  width: 52px;
+  height: 52px;
+  display: grid;
+  place-items: center;
+  color: #9fc4e8;
+}
+
+.vsel-empty-icon svg {
+  width: 42px;
+  height: 42px;
+  stroke-width: 1.2;
+}
+
+.vsel-empty-title {
+  margin-top: 8px;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.vsel-empty-sub {
+  margin-top: 7px;
+  max-width: 340px;
+  color: var(--text-3);
+  font-size: 11.5px;
+  line-height: 1.75;
+}
+
+@media (max-width: 860px) {
+  .vsel-side {
+    flex-basis: 205px;
+  }
+
+  .vsel-grow {
+    padding: 15px 14px;
+  }
+}
+
 /* ============================ 下载 ============================ */
 .dl-head {
   display: flex;
@@ -2473,6 +3071,8 @@ window.Icons = (() => {
 
   const DEFAULT_SETTINGS = {
     gameDir: '/home/user/.minecraft',
+    gameFolders: ['/home/user/.minecraft'],
+    starredVersions: [],
     javaPath: '/usr/lib/jvm/java-17-openjdk/bin/java',
     maxMemory: 4096,
     defaultMemory: 8192,
@@ -2572,7 +3172,7 @@ window.Icons = (() => {
       title: '内测提示',
       tag: '公告',
       date: '2026-11-21',
-      body: '这是 Plain Craft Launcher 2 的开源复刻实现：界面按 PCL2 布局还原，底层为真实的 Mojang 下载与启动流程，支持原版、Fabric、Modrinth Mod 与 .mrpack 整合包。'
+      body: '这是 Plain Craft Launcher 2 的第三方独立实现：界面与版本选择逻辑参考 PCL2（作者龙腾猫跃），底层为真实的 Mojang 下载与启动流程，支持原版、Fabric、Modrinth Mod 与 .mrpack 整合包。'
     },
     {
       id: 'n2',
@@ -2614,6 +3214,32 @@ window.Icons = (() => {
     return { ok: true, taskId };
   }
 
+  const folderName = (p) => {
+    const parts = String(p || '').split(/[\\/]/).filter(Boolean);
+    if (!parts.length) return String(p || '');
+    const base = parts[parts.length - 1];
+    if (base === '.minecraft') {
+      const parent = parts[parts.length - 2] || '';
+      const grand = parts[parts.length - 3] || '';
+      if (!parent || /roaming/i.test(parent) || /^(home|users)$/i.test(grand)) return '官方启动器文件夹';
+      return parent;
+    }
+    return base;
+  };
+
+  function mockFolders() {
+    const paths = Array.isArray(settings.gameFolders) && settings.gameFolders.length
+      ? settings.gameFolders
+      : [settings.gameDir].filter(Boolean);
+    return paths.map((p) => ({ path: p, name: folderName(p), active: p === settings.gameDir, exists: true }));
+  }
+
+  function saveMockSettings(patch) {
+    settings = { ...settings, ...(patch || {}) };
+    try { localStorage.setItem(LS_KEY, JSON.stringify(settings)); } catch (e) {}
+    return settings;
+  }
+
   window.API = {
     isElectron: false,
     platform: 'linux',
@@ -2626,9 +3252,34 @@ window.Icons = (() => {
     settings: {
       get: async () => ({ ...settings, accounts }),
       set: async (patch) => {
-        settings = { ...settings, ...patch };
+        const p = { ...(patch || {}) };
+        if (p.gameDir) {
+          const list = Array.isArray(settings.gameFolders) ? settings.gameFolders : [];
+          p.gameFolders = [...new Set([p.gameDir, ...list])];
+        }
+        settings = { ...settings, ...p };
         try { localStorage.setItem(LS_KEY, JSON.stringify(settings)); } catch (e) {}
         return settings;
+      }
+    },
+    folders: {
+      list: async () => mockFolders(),
+      add: async () => ({ ok: false, error: '浏览器预览不能访问本地文件夹' }),
+      create: async () => ({ ok: false, error: '浏览器预览不能创建文件夹' }),
+      switch: async (p) => {
+        const paths = Array.isArray(settings.gameFolders) && settings.gameFolders.length
+          ? settings.gameFolders
+          : [settings.gameDir].filter(Boolean);
+        if (!paths.includes(p)) throw new Error('该文件夹不在列表中');
+        saveMockSettings({ gameDir: p, version: '' });
+        return { ok: true, path: p, folders: mockFolders() };
+      },
+      remove: async (p) => {
+        const paths = (settings.gameFolders || []).filter((x) => x !== p);
+        if (paths.length < 1) throw new Error('至少要保留一个游戏文件夹');
+        const switched = settings.gameDir === p;
+        saveMockSettings({ gameFolders: paths, gameDir: switched ? paths[0] : settings.gameDir, version: switched ? '' : settings.version });
+        return { ok: true, switched, active: settings.gameDir, folders: mockFolders() };
       }
     },
     diagnostics: {
@@ -3297,7 +3948,7 @@ window.Icons = (() => {
 
   function buildNav() {
     const nav = PCL.$('#topnav');
-    PCL.$('#vdBack')?.addEventListener('click', () => PCL.go('versions'));
+    PCL.$('#vdBack')?.addEventListener('click', () => PCL.go(PCL.state.page === 'select' ? 'home' : 'select'));
     nav.innerHTML = NAV.map(
       (n) =>
         `<button class="tab" data-page="${n.id}">${Icons[n.icon] || ''}<span>${n.label}</span></button>`
@@ -3310,14 +3961,23 @@ window.Icons = (() => {
 
   function syncNav() {
     const isVD = PCL.state.page === 'version';
-    document.body.classList.toggle('version-mode', isVD);
+    const isSelect = PCL.state.page === 'select';
+    const isDetail = isVD || isSelect;
+    document.body.classList.toggle('version-mode', isDetail);
+    document.body.classList.toggle('select-mode', isSelect);
     document.body.dataset.page = PCL.state.page;
     const bar = PCL.$('#vdBar');
     if (bar) {
-      bar.hidden = !isVD;
-      if (isVD) PCL.$('#vdTitle').textContent = `版本设置 - ${PCL.state.params.id || (PCL.state.settings && PCL.state.settings.version) || ''}`;
+      bar.hidden = !isDetail;
+      if (isDetail) {
+        PCL.$('#vdTitle').textContent = isSelect
+          ? '版本选择'
+          : `版本设置 - ${PCL.state.params.id || (PCL.state.settings && PCL.state.settings.version) || ''}`;
+      }
     }
-    PCL.$$('#topnav .tab').forEach((t) => t.classList.toggle('active', t.dataset.page === PCL.state.page));
+    PCL.$$('#topnav .tab').forEach((t) =>
+      t.classList.toggle('active', t.dataset.page === (PCL.state.page === 'select' ? 'home' : PCL.state.page))
+    );
   }
 
   /* ------------------------------ 路由 ------------------------------ */
@@ -3507,12 +4167,13 @@ window.Icons = (() => {
   /* ------------------------------ 初始化 ------------------------------ */
   PCL.init = async () => {
     const API = window.API;
-    const [settings, accounts, versions, news, appInfo] = await Promise.all([
+    const [settings, accounts, versions, news, appInfo, folders] = await Promise.all([
       API.settings.get().catch(() => ({})),
       API.accounts.list().catch(() => []),
       API.versions.list().catch(() => []),
       API.news().catch(() => []),
       API.appInfo().catch(() => ({})),
+      API.folders && API.folders.list ? API.folders.list().catch(() => []) : Promise.resolve([]),
     ]);
     const st = settings || {};
     const vs = Array.isArray(versions) ? versions : [];
@@ -3520,6 +4181,11 @@ window.Icons = (() => {
     PCL.state.accounts = accounts || [];
     PCL.state.versions = vs;
     PCL.state.news = news || [];
+    PCL.state.folders = Array.isArray(folders) && folders.length
+      ? folders
+      : st.gameDir
+        ? [{ path: st.gameDir, name: String(st.gameDir).split(/[\\/]/).filter(Boolean).pop() || '.minecraft', active: true, exists: true }]
+        : [];
     PCL.state.pageData.appInfo = appInfo || {};
     // 首屏不要等背景图/音乐解码：主题色已经同步应用，媒体在后台继续加载
     PCL.applyPersonal().catch(() => {});
@@ -3719,12 +4385,8 @@ window.Icons = (() => {
         ? ''
         : `<div class="home-actions">
              <button class="btn ${ver ? '' : 'primary'} home-pick" id="btnPickVersion">版本选择</button>
-             ${ver ? '<button class="btn home-dots" id="btnVersionMore" title="更多">…</button>' : ''}
-           </div>
-           ${ver ? `<div class="home-vermenu" id="homeVerMenu" hidden>
-             <div class="hvm-item" data-vm="settings">版本设置</div>
-             <div class="hvm-item" data-vm="folder">打开版本目录</div>
-           </div>` : ''}`;
+             <button class="btn" id="btnVersionSettings" ${ver ? '' : 'disabled'}>版本设置</button>
+           </div>`;
 
       const news = state.news && state.news[0]
         ? `<div class="card home-notice" id="homeNotice">
@@ -3843,23 +4505,18 @@ window.Icons = (() => {
         });
 
       const pick = PCL.$('#btnPickVersion', root);
-      if (pick) pick.addEventListener('click', () => versionPickerModal());
-
-      const more = PCL.$('#btnVersionMore', root);
-      if (more) {
-        const menu = PCL.$('#homeVerMenu', root);
-        more.addEventListener('click', (e) => {
-          e.stopPropagation();
-          menu.hidden = !menu.hidden;
+      if (pick)
+        pick.addEventListener('click', () => {
+          state.pageData.versionKeyword = '';
+          PCL.go('select');
         });
-        PCL.$$('[data-vm]', root).forEach((el) =>
-          el.addEventListener('click', () => {
-            menu.hidden = true;
-            if (el.dataset.vm === 'settings') PCL.go('version', { id: state.settings.version });
-            else API.versions.open(state.settings.version);
-          })
-        );
-      }
+
+      const versionSettings = PCL.$('#btnVersionSettings', root);
+      if (versionSettings)
+        versionSettings.addEventListener('click', () => {
+          if (!state.settings.version) return;
+          PCL.go('version', { id: state.settings.version });
+        });
 
       const stopGame = () =>
         PCL.confirm(
@@ -4031,49 +4688,451 @@ window.Icons = (() => {
     return m;
   }
 
-  /* ---------------------- 版本选择弹窗 ---------------------- */
-  function versionPickerModal() {
-    const state = PCL.state;
-    const versions = state.versions;
-    const body =
-      versions.length === 0
-        ? `<div class="empty">还没有安装任何版本<br/><span class="tiny">前往「下载」页安装一个版本</span></div>`
-        : versions
-            .map(
-              (v) => `<div class="row" data-id="${PCL.esc(v.id)}" style="cursor:pointer;padding:8px 6px">
-              ${PCL.blockIcon(PCL.blockKind(v), "sm")}
-              <div class="row-main">
-                <div class="row-title">${PCL.esc(v.id)}</div>
-                <div class="row-desc">${v.loader || '原版'} · 最近使用 ${PCL.fmtTime(v.lastUsed)}</div>
-              </div>
-              ${v.id === state.settings.version ? '<span class="tag">当前</span>' : ''}
-            </div>`
-            )
-            .join('');
+  PCL.addAccountModal = addAccountModal;
+})();
 
-    PCL.modal({
-      title: '版本选择',
-      width: 480,
-      body: `<div style="max-height:420px">${body}</div>`,
-      footer: `<button class="btn" data-close>关闭</button><button class="btn primary" id="goDownload">安装新版本</button>`,
-      onMount: (wrap, close) => {
-        PCL.$$('[data-id]', wrap).forEach((row) =>
-          row.addEventListener('click', async () => {
-            await PCL.saveSettings({ version: row.dataset.id });
-            close();
-            PCL.render();
-          })
-        );
-        wrap.querySelector('#goDownload').addEventListener('click', () => {
-          close();
-          PCL.go('download');
-        });
-      },
+/* ============================ 版本选择（PCL2 移植） ============================
+ * 页面结构、文件夹列表、版本分组与右键菜单按 PCL2 2.13.1.1 的
+ * PageSelectLeft / PageSelectRight / ModMinecraft 逻辑移植。
+ * PCL2 版权归龙腾猫跃所有，以《PCL 分发有限许可》发布；本项目为 Electron/JS
+ * 独立实现，不直接运行其 VB.NET/WPF 源码。许可与署名见 THIRD_PARTY_NOTICES.md。
+ * ============================================================================ */
+(function () {
+  const P = (window.PCLPages = window.PCLPages || {});
+  const API = window.API;
+
+  const FOOL_IDS = new Set([
+    '15w14a', '3D Shareware v1.34', '20w14infinite', '20w14∞', '22w13oneBlockAt',
+    '23w13a_or_b', '24w14potato', '25w14craftmine', '1.RV-Pre1', '23w13a_or_b_2',
+  ]);
+
+  const isFool = (id) => FOOL_IDS.has(id) || /craftmine|potato|oneblock|shareware|infinite|∞/i.test(String(id || ''));
+
+  /** 1.0 ~ 1.5.2 归入远古版，和 PCL2 的“不常用版本”观感一致 */
+  function isOldRelease(id) {
+    const m = /^1\.(\d+)(?:\.|$)/.exec(String(id || ''));
+    return !!m && Number(m[1]) <= 5;
+  }
+
+  function sortByRelease(items) {
+    return items.slice().sort((a, b) => {
+      const ta = Date.parse(a.releaseTime) || 0;
+      const tb = Date.parse(b.releaseTime) || 0;
+      if (tb !== ta) return tb - ta;
+      return String(b.id).localeCompare(String(a.id), 'zh-CN', { numeric: true });
     });
   }
 
-  PCL.addAccountModal = addAccountModal;
-  PCL.versionPickerModal = versionPickerModal;
+  /** 1.21.10 / 1.21.1 归为同一 drop，只把最新的放进“常规版本” */
+  function dropOf(v) {
+    const gv = String(v.gameVersion || v.inheritsFrom || v.id || '');
+    const m1 = /^1\.(\d+)/.exec(gv);
+    if (m1) return `1.${m1[1]}`;
+    const m2 = /^(\d+\.\d+)/.exec(gv);
+    return m2 ? m2[1] : gv;
+  }
+
+  function moddedLabel(items) {
+    const loaders = [...new Set(items.map((v) => String(v.loader || '').trim()).filter(Boolean))];
+    if (loaders.length > 1) return '可安装 Mod';
+    return `${loaders[0] || 'Mod'} 版本`;
+  }
+
+  function groupVersions(versions, starredIds) {
+    const starred = versions.filter((v) => starredIds.has(v.id));
+    const rest = versions.filter((v) => !starredIds.has(v.id));
+    const buckets = { modded: [], release: [], snap: [], old: [], fool: [], pack: [], other: [] };
+
+    for (const v of rest) {
+      if (isFool(v.id)) buckets.fool.push(v);
+      else if (v.type === 'modpack') buckets.pack.push(v);
+      else if (v.loader) buckets.modded.push(v);
+      else if (v.type === 'old_beta' || v.type === 'old_alpha' || isOldRelease(v.id)) buckets.old.push(v);
+      else if (v.type === 'snapshot') buckets.snap.push(v);
+      else if (v.type === 'modified') buckets.other.push(v);
+      else buckets.release.push(v);
+    }
+
+    const releases = sortByRelease(buckets.release);
+    const latestByDrop = new Map();
+    for (const v of releases) {
+      const drop = dropOf(v);
+      if (!latestByDrop.has(drop)) latestByDrop.set(drop, v);
+    }
+
+    // PCL2 只把“整体最新版本”是快照时的那一个快照放进常规版本；其余快照进不常用
+    const latestOverall = sortByRelease([...buckets.release, ...buckets.snap])[0] || null;
+    const latestSnap = latestOverall && latestOverall.type === 'snapshot' ? latestOverall : null;
+    const useful = sortByRelease([...latestByDrop.values(), latestSnap].filter(Boolean));
+    const usefulIds = new Set(useful.map((v) => v.id));
+    const rubbish = sortByRelease([
+      ...buckets.old,
+      ...buckets.snap.filter((v) => v !== latestSnap),
+      ...releases.filter((v) => !usefulIds.has(v.id)),
+    ]);
+
+    const groups = [];
+    if (starred.length) groups.push({ key: 'star', label: '收藏夹', items: sortByRelease(starred), noCount: true });
+    const modded = sortByRelease(buckets.modded);
+    if (modded.length) groups.push({ key: 'modded', label: moddedLabel(modded), items: modded });
+    if (useful.length) groups.push({ key: 'vanilla', label: '常规版本', items: useful });
+    if (rubbish.length) groups.push({ key: 'rubbish', label: '不常用版本', items: rubbish });
+    if (buckets.fool.length) groups.push({ key: 'fool', label: '愚人节版本', items: sortByRelease(buckets.fool) });
+    if (buckets.pack.length) groups.push({ key: 'pack', label: '整合包', items: sortByRelease(buckets.pack) });
+    if (buckets.other.length) groups.push({ key: 'other', label: '其他版本', items: sortByRelease(buckets.other) });
+    return groups;
+  }
+
+  function folderName(dir) {
+    const parts = String(dir || '').split(/[\\/]/).filter(Boolean);
+    if (!parts.length) return '.minecraft';
+    const base = parts[parts.length - 1];
+    if (base === '.minecraft') {
+      const parent = parts[parts.length - 2] || '';
+      const grand = parts[parts.length - 3] || '';
+      if (!parent || /roaming/i.test(parent) || /^(home|users)$/i.test(grand)) return '官方启动器文件夹';
+      return parent;
+    }
+    return base;
+  }
+
+  /** PCL2 的版本条目只显示“加载器/类型 + 基础版本”，不显示发布时间 */
+  function rowInfo(v) {
+    const id = String(v.id || '');
+    const base = v.gameVersion || v.inheritsFrom || id;
+    const tail = id.startsWith(base)
+      ? id
+          .slice(base.length)
+          .replace(/^[\s_-]+/, '')
+          .replace(/[-_]/g, ' · ')
+          .replace(/\s+/g, ' ')
+          .trim()
+      : '';
+
+    if (v.type === 'modpack') return base && base !== id ? `整合包 · ${base}` : '整合包';
+    if (v.type === 'old_beta') return `远古 Beta · ${base}`;
+    if (v.type === 'old_alpha') return `远古 Alpha · ${base}`;
+    if (v.type === 'snapshot') return `快照 · ${base}`;
+    if (v.loader) return tail ? `${base} · ${tail}` : `${base} · ${v.loader}`;
+    if (v.type === 'modified') return base && base !== id ? `自定义 · ${base}` : '自定义';
+    return `原版 · ${base}`;
+  }
+
+  function rowHtml(v, starred) {
+    const id = PCL.esc(v.id);
+    return `<div class="vsel-row" data-id="${id}" role="button" tabindex="0" title="选用 ${id}">
+      <span class="vsel-icon">${PCL.blockIcon(isOldRelease(v.id) ? 'stone' : PCL.blockKind(v), 'sm')}</span>
+      <div class="vsel-row-main">
+        <div class="vsel-row-name">${id}</div>
+        <div class="vsel-row-sub">${PCL.esc(rowInfo(v))}</div>
+      </div>
+      <div class="vsel-row-actions">
+        <button class="vsel-act star ${starred ? 'starred' : ''}" data-act="star" title="${starred ? '取消收藏' : '收藏'}">${Icons.star}</button>
+        <button class="vsel-act danger" data-act="del" title="删除版本">${Icons.trash}</button>
+        <button class="vsel-act" data-act="settings" title="版本设置">${Icons.gear}</button>
+      </div>
+    </div>`;
+  }
+
+  P.select = {
+    sidebar: true,
+
+    render(state) {
+      const pd = state.pageData;
+      const versions = state.versions || [];
+      const starredIds = new Set(
+        Array.isArray(state.settings.starredVersions) ? state.settings.starredVersions.map(String) : []
+      );
+      const groups = groupVersions(versions, starredIds);
+      const gameDir = state.settings.gameDir || '';
+      const folders = Array.isArray(state.folders) && state.folders.length
+        ? state.folders
+        : [{ path: gameDir, name: folderName(gameDir), active: true, exists: true }];
+      const activeFolder = folders.find((f) => f.active || f.path === gameDir) || folders[0];
+      const open = pd.vselOpen || {};
+
+      const cards = groups.length
+        ? groups
+            .map((g) => {
+              const expanded = open[g.key] !== undefined ? !!open[g.key] : !['rubbish', 'fool', 'other'].includes(g.key);
+              const title = g.noCount ? g.label : `${g.label} (${g.items.length})`;
+              return `<section class="vsel-card" data-card="${g.key}">
+                <button class="vsel-card-head" data-group="${g.key}" aria-expanded="${expanded}">
+                  <span class="vsel-card-title">${PCL.esc(title)}</span>
+                  <span class="vsel-card-chev ${expanded ? 'open' : ''}">${Icons.chevron}</span>
+                </button>
+                ${expanded ? `<div class="vsel-rows">${g.items.map((v) => rowHtml(v, starredIds.has(v.id))).join('')}</div>` : ''}
+              </section>`;
+            })
+            .join('')
+        : `<div class="vsel-empty">
+             <div class="vsel-empty-title">无可用版本</div>
+             <div class="vsel-empty-line"></div>
+             <div class="vsel-empty-sub">未找到任何版本的游戏，请先下载任意版本的游戏。<br>若有已存在的游戏，请在左侧列表中选择“添加已有文件夹”，选择 .minecraft 文件夹将其导入。</div>
+             <button class="btn primary" id="vselEmptyInstall">下载游戏</button>
+           </div>`;
+
+      const folderRows = folders
+        .map((f) => {
+          const active = f === activeFolder || f.path === (activeFolder && activeFolder.path);
+          const name = f.name || folderName(f.path);
+          return `<div class="vsel-folder ${active ? 'active' : ''}" data-folder="${PCL.esc(f.path)}" role="button" tabindex="0" title="${PCL.esc(f.path)} · 点击切换，双击打开">
+            <span class="vsel-folder-main"><b>${PCL.esc(name)}</b><i>${PCL.esc(f.path)}</i></span>
+            <button class="vsel-folder-more" data-folder-menu="${PCL.esc(f.path)}" title="文件夹操作">${Icons.gear}</button>
+          </div>`;
+        })
+        .join('');
+
+      return `<aside class="vsel-side">
+        <div class="vsel-side-label">文件夹列表</div>
+        <div class="vsel-folder-list">${folderRows}</div>
+
+        <div class="vsel-side-label">添加或导入</div>
+        <button class="vsel-side-item" data-side="create">${Icons.plus}新建 .minecraft 文件夹</button>
+        <button class="vsel-side-item" data-side="add">${Icons.plus}添加已有文件夹</button>
+        <button class="vsel-side-item" data-side="pack">${Icons.package}导入整合包</button>
+      </aside>
+
+      <div class="grow vsel-grow">
+        <div class="vsel-list">${cards}</div>
+      </div>`;
+    },
+
+    mount(root, state) {
+      const pd = state.pageData;
+      const refreshData = async () => {
+        const [folders, versions, settings] = await Promise.all([
+          API.folders.list().catch(() => state.folders || []),
+          API.versions.list().catch(() => []),
+          API.settings.get().catch(() => state.settings),
+        ]);
+        state.folders = Array.isArray(folders) && folders.length ? folders : state.folders;
+        state.versions = Array.isArray(versions) ? versions : [];
+        state.settings = { ...state.settings, ...(settings || {}) };
+        const hasCurrent = state.versions.some((v) => v.id === state.settings.version);
+        if (state.versions.length && !hasCurrent) {
+          state.settings.version = state.versions[0].id;
+          await API.settings.set({ version: state.settings.version }).catch(() => {});
+        } else if (!state.versions.length && state.settings.version) {
+          state.settings.version = '';
+          await API.settings.set({ version: '' }).catch(() => {});
+        }
+        PCL.render();
+      };
+
+      const folders = Array.isArray(state.folders) && state.folders.length
+        ? state.folders
+        : [{ path: state.settings.gameDir || '', name: folderName(state.settings.gameDir), active: true, exists: true }];
+
+      const activateFolder = async (path, open = false) => {
+        if (!path) return;
+        if (path === state.settings.gameDir) {
+          if (open) API.versions.open('');
+          return;
+        }
+        try {
+          const r = await API.folders.switch(path);
+          if (r && r.ok === false) throw new Error(r.error || '切换失败');
+          await refreshData();
+          PCL.toast(`已切换到 ${folderName(path)}`, 'success', 1400);
+          if (open) API.versions.open('');
+        } catch (e) {
+          PCL.toast('切换文件夹失败：' + String(e.message || e), 'error');
+        }
+      };
+
+      // PCL2 的文件夹操作是右键菜单，不是常驻按钮
+      let menu = null;
+      let menuOutside = null;
+      const closeMenu = () => {
+        if (menu && menu.parentNode) menu.parentNode.removeChild(menu);
+        menu = null;
+        if (menuOutside) {
+          document.removeEventListener('mousedown', menuOutside, true);
+          menuOutside = null;
+        }
+      };
+      const openFolderMenu = (path, x, y) => {
+        closeMenu();
+        const only = folders.length <= 1;
+        menu = document.createElement('div');
+        menu.className = 'vsel-menu';
+        menu.innerHTML = `
+          <button data-menu="open">${Icons.folder}<span>打开文件夹</span></button>
+          <button data-menu="refresh">${Icons.refresh}<span>刷新版本列表</span></button>
+          <div class="vsel-menu-sep"></div>
+          <button data-menu="remove" class="danger" ${only ? 'disabled' : ''}>${Icons.trash}<span>移出列表</span></button>`;
+        document.body.appendChild(menu);
+        const mw = menu.offsetWidth || 168;
+        const mh = menu.offsetHeight || 112;
+        menu.style.left = `${Math.max(6, Math.min(x, window.innerWidth - mw - 8))}px`;
+        menu.style.top = `${Math.max(6, Math.min(y, window.innerHeight - mh - 8))}px`;
+
+        menu.querySelectorAll('[data-menu]').forEach((btn) =>
+          btn.addEventListener('click', async () => {
+            const action = btn.dataset.menu;
+            closeMenu();
+            if (action === 'open') return activateFolder(path, true);
+            if (action === 'refresh') return refreshData();
+            if (action === 'remove') {
+              if (folders.length <= 1) return PCL.toast('至少要保留一个游戏文件夹', 'error');
+              PCL.confirm(
+                '从列表移除文件夹',
+                `只会把「${path}」从启动器列表移除，不会删除磁盘上的任何文件。确定继续吗？`,
+                async () => {
+                  try {
+                    const r = await API.folders.remove(path);
+                    if (r && r.ok === false) throw new Error(r.error || '移除失败');
+                    await refreshData();
+                    PCL.toast('已从列表移除', 'success');
+                  } catch (e) {
+                    PCL.toast('移除失败：' + String(e.message || e), 'error');
+                  }
+                },
+                '移除'
+              );
+            }
+          })
+        );
+
+        setTimeout(() => {
+          menuOutside = (e) => {
+            if (!menu) return closeMenu();
+            if (menu.contains(e.target)) return;
+            closeMenu();
+          };
+          document.addEventListener('mousedown', menuOutside, true);
+        }, 0);
+      };
+
+      PCL.$('#vselEmptyInstall', root)?.addEventListener('click', () => {
+        pd.dlTab = 'auto';
+        PCL.go('download');
+      });
+
+      PCL.$$('[data-folder]', root).forEach((folder) => {
+        const path = folder.dataset.folder;
+        folder.addEventListener('click', (e) => {
+          if (e.target.closest('[data-folder-menu]')) return;
+          activateFolder(path);
+        });
+        folder.addEventListener('dblclick', (e) => {
+          if (e.target.closest('[data-folder-menu]')) return;
+          activateFolder(path, true);
+        });
+        folder.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            activateFolder(path);
+          }
+        });
+        folder.addEventListener('contextmenu', (e) => {
+          e.preventDefault();
+          openFolderMenu(path, e.clientX, e.clientY);
+        });
+      });
+
+      PCL.$$('[data-folder-menu]', root).forEach((btn) =>
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const rect = btn.getBoundingClientRect();
+          openFolderMenu(btn.dataset.folderMenu, rect.left, rect.bottom + 4);
+        })
+      );
+
+      PCL.$$('[data-side]', root).forEach((btn) =>
+        btn.addEventListener('click', async () => {
+          const side = btn.dataset.side;
+          if (side === 'pack') {
+            pd.dlTab = 'pack';
+            PCL.go('download');
+            return;
+          }
+          if (side === 'add' || side === 'create') {
+            try {
+              const r = await API.folders[side]();
+              if (!r || r.canceled) return;
+              if (r.ok === false) throw new Error(r.error || '操作失败');
+              await refreshData();
+              PCL.toast(side === 'create' ? '已创建并切换文件夹' : '已添加并切换文件夹', 'success', 1600);
+            } catch (e) {
+              PCL.toast('操作失败：' + String(e.message || e), 'error');
+            }
+          }
+        })
+      );
+
+      const choose = async (id) => {
+        if (id === state.settings.version) return PCL.go('home');
+        await PCL.saveSettings({ version: id });
+        PCL.toast(`已选用 ${id}`, 'success', 1600);
+        PCL.go('home');
+      };
+
+      PCL.$$('.vsel-row', root).forEach((row) => {
+        const id = row.dataset.id;
+        row.addEventListener('click', async (e) => {
+          const act = e.target.closest('[data-act]');
+          if (act) {
+            e.stopPropagation();
+            if (act.dataset.act === 'star') {
+              const set = new Set(
+                Array.isArray(state.settings.starredVersions) ? state.settings.starredVersions.map(String) : []
+              );
+              if (set.has(id)) set.delete(id);
+              else set.add(id);
+              await PCL.saveSettings({ starredVersions: [...set] });
+              PCL.render();
+            } else if (act.dataset.act === 'settings') {
+              pd.vTab = 'launch';
+              PCL.go('version', { id });
+            } else if (act.dataset.act === 'del') {
+              PCL.confirm(
+                '删除版本',
+                `确定删除「${id}」吗？该版本的 jar、Mod 与存档都会被移除，且不可恢复。`,
+                async () => {
+                  try {
+                    const r = await API.versions.del(id);
+                    if (r && r.ok === false) throw new Error(r.error || '版本不存在');
+                    state.versions = await API.versions.list();
+                    if (state.settings.version === id) {
+                      state.settings.version = state.versions[0] ? state.versions[0].id : '';
+                      await PCL.saveSettings({ version: state.settings.version });
+                    }
+                    PCL.toast('已删除', 'success');
+                    PCL.render();
+                  } catch (e) {
+                    PCL.toast('删除失败：' + String(e.message || e).replace(/^Error invoking remote method .*?: /, ''), 'error');
+                  }
+                },
+                '删除'
+              );
+            }
+            return;
+          }
+          choose(id);
+        });
+        row.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            choose(id);
+          }
+        });
+      });
+
+      PCL.$$('[data-group]', root).forEach((head) =>
+        head.addEventListener('click', () => {
+          const key = head.dataset.group;
+          pd.vselOpen = pd.vselOpen || {};
+          const currentlyOpen = head.getAttribute('aria-expanded') === 'true';
+          pd.vselOpen[key] = !currentlyOpen;
+          PCL.render();
+        })
+      );
+
+      closeMenu();
+    },
+  };
 })();
 
 /* ============================ 版本管理 ============================ */
@@ -5813,10 +6872,11 @@ window.Icons = (() => {
               ${javaOptions || '<option value="">未检测到 Java</option>'}
               ${!javas.length && currentJava ? `<option value="${PCL.esc(currentJava)}" selected>手动指定</option>` : ''}
             </select>
-            <button class="btn small" id="btnDetectJava">${Icons.refresh}自动搜索</button>
+            <button class="btn small" id="btnDetectJava">${Icons.refresh}自动寻找 Java</button>
             <button class="btn small" id="btnJavaManage">${Icons.download}自动安装</button>
           </div>
         </div>
+        <div class="tiny muted mt-6">启动时会自动扫描 PATH、JAVA_HOME、注册表、常见 JDK 目录和各启动器自带的 Java；也可以点“自动寻找 Java”重新扫描。</div>
       </div>
 
       <div class="card settings-card mt-12">
@@ -5901,6 +6961,7 @@ window.Icons = (() => {
             (j) => `<div class="java-item" data-pick-java="${PCL.esc(j.path)}" style="cursor:pointer">
               <span class="tag">Java ${j.major}</span>
               ${j.managed ? '<span class="tag" style="background:#eaf6ee;border-color:#bfe3cb;color:#2c7a4b">启动器安装</span>' : ''}
+              ${j.source && j.source !== 'PATH' ? `<span class="tag" style="background:#f5f7fa;border-color:#e2e6eb;color:#6b7785">${PCL.esc(j.source)}</span>` : ''}
               <span class="grow ellipsis" style="font-size:11.5px">${PCL.esc(j.path)}</span>
               <span class="tiny muted">${PCL.esc(j.output || '')}</span>
             </div>`
@@ -5960,13 +7021,20 @@ window.Icons = (() => {
   async function detectJava(state, force) {
     if (state.pageData.javaList && !force) return;
     try {
-      state.pageData.javaList = await API.java.detect();
+      const list = force
+        ? await API.java.detect()
+        : PCL.javaScan
+          ? await PCL.javaScan
+          : await API.java.detect();
+      state.pageData.javaList = Array.isArray(list) ? list : [];
     } catch (e) {
       state.pageData.javaList = [];
     }
     if (force) {
+      PCL.javaScan = Promise.resolve(state.pageData.javaList);
       PCL.render();
-      PCL.toast(`检测到 ${state.pageData.javaList.length} 个 Java`, 'success', 1800);
+      const n = state.pageData.javaList.length;
+      PCL.toast(n ? `自动找到 ${n} 个 Java` : '没有找到已有 Java，可以点“自动安装”', n ? 'success' : 'error', 2400);
     }
   }
 
@@ -6345,12 +7413,15 @@ window.Icons = (() => {
       if (dir) {
         await PCL.saveSettings({ gameDir: dir });
         state.settings = await API.settings.get();
+        state.folders = await API.folders.list().catch(() => state.folders || []);
         state.versions = await API.versions.list();
         PCL.render();
       }
     });
     PCL.$('#setGameDir', root)?.addEventListener('change', async (e) => {
       await PCL.saveSettings({ gameDir: e.target.value.trim() });
+      state.settings = await API.settings.get();
+      state.folders = await API.folders.list().catch(() => state.folders || []);
       state.versions = await API.versions.list();
       PCL.toast('游戏目录已更新', 'success', 1600);
       PCL.render();
@@ -6516,6 +7587,16 @@ window.Icons = (() => {
         body = `
           <div class="card more-card">
             <div class="card-title">关于</div>
+            <div style="margin-bottom:12px;padding:12px 14px;border:1px solid #d8e6fa;border-radius:6px;background:#f5f9ff">
+              <div style="font-size:13px;font-weight:700;color:#1f5fa8">特别鸣谢 · Plain Craft Launcher 2</div>
+              <div class="tiny muted mt-6" style="line-height:1.8">
+                版本选择页的页面结构、版本分组规则、文件夹菜单与交互细节参考自 PCL2 公开源码；PCL2 作者为龙腾猫跃（LTCat）。
+              </div>
+              <div style="display:flex;gap:8px;margin-top:9px">
+                <button class="btn small outline" data-open-url="https://github.com/Meloong-Git/PCL">PCL2 项目</button>
+                <button class="btn small outline" data-open-url="https://meloong.com/afd/a/LTCat">赞助龙腾猫跃</button>
+              </div>
+            </div>
             <div class="kv">
               <span class="k">启动器</span><span class="v">StartPro Launcher（SPL）· Minecraft 启动器 v${PCL.esc(info.version || '1.0.0')}</span>
               <span class="k">作者</span><span class="v">竹下一刀魂</span>
@@ -6524,13 +7605,15 @@ window.Icons = (() => {
               <span class="k">物理内存</span><span class="v">${info.totalMem ? (info.totalMem / 1024).toFixed(1) + ' GB' : '—'}</span>
             </div>
             <div class="tiny muted mt-12" style="line-height:1.9">
-              StartPro 是对 PCL2 界面的独立复刻实现，与龙腾猫跃及 PCL2 官方无关，不含其任何代码或素材。<br/>
-              感谢 PCL2 作者龙腾猫跃、Electron、Minecraft 与 Modrinth 社区。
+              StartPro 是第三方独立实现，不是 PCL2 官方版本，与龙腾猫跃及 PCL2 官方无隶属关系。<br/>
+              界面布局、分组规则与交互逻辑参考自 Plain Craft Launcher 2 的公开源码；PCL2 版权归龙腾猫跃所有，按《PCL 分发有限许可》发布，许可与署名说明见项目根目录 THIRD_PARTY_NOTICES.md。<br/>
+              Minecraft 是 Mojang Studios 的商标，本项目与 Mojang 无关联，请使用正版游戏。
             </div>
           </div>
           <div class="card more-card mt-10">
             <div class="card-title">鸣谢</div>
-            <div class="help-row"><span class="help-ico grass">${Icons.star}</span><div class="help-main"><div class="help-title">龙腾猫跃</div><div class="help-desc">PCL2 原作者，界面与交互设计的来源</div></div></div>
+            <div class="help-row" style="cursor:pointer" data-open-url="https://github.com/Meloong-Git/PCL"><span class="help-ico grass">${Icons.star}</span><div class="help-main"><div class="help-title">龙腾猫跃 · Plain Craft Launcher 2</div><div class="help-desc">PCL2 作者；版本选择页的结构、分组与交互参考来源</div></div><span class="help-go">${Icons.link || Icons.chevron}</span></div>
+            <div class="help-row" style="cursor:pointer" data-open-url="https://meloong.com/afd/a/LTCat"><span class="help-ico faq">¥</span><div class="help-main"><div class="help-title">赞助 PCL2 作者</div><div class="help-desc">如果 PCL2 帮到了你，可以通过爱发电支持龙腾猫跃</div></div><span class="help-go">${Icons.link || Icons.chevron}</span></div>
             <div class="help-row"><span class="help-ico stone">${Icons.box}</span><div class="help-main"><div class="help-title">Mojang Studios</div><div class="help-desc">Minecraft 与官方版本清单</div></div></div>
           </div>`;
       } else {
@@ -6587,6 +7670,13 @@ window.Icons = (() => {
 
       PCL.$$('[data-ai-open]', root).forEach((el) =>
         el.addEventListener('click', () => PCL.assistant && PCL.assistant.open())
+      );
+
+      PCL.$$('[data-open-url]', root).forEach((el) =>
+        el.addEventListener('click', (e) => {
+          e.preventDefault();
+          API.openExternal(el.dataset.openUrl);
+        })
       );
 
       PCL.$$('[data-guide]', root).forEach((el) =>
@@ -7664,6 +8754,26 @@ window.Icons = (() => {
       if (el && info.version) el.textContent = 'v' + info.version;
       PCL.state.pageData.appInfo = info;
     } catch (e) {}
+
+    // 后台自动寻找本机 Java；找不到不阻塞界面，打开设置时会复用这份结果
+    PCL.javaScan = API.java.detect()
+      .then((list) => {
+        const found = Array.isArray(list) ? list : [];
+        PCL.state.pageData.javaList = found;
+        const selected = PCL.state.settings.javaPath || '';
+        const same = (a, b) => {
+          if (!a || !b) return false;
+          return String(a).replace(/\\/g, '/').replace(/\/+$/, '').toLowerCase() ===
+            String(b).replace(/\\/g, '/').replace(/\/+$/, '').toLowerCase();
+        };
+        const selectedFound = found.some((j) => same(j.path, selected));
+        if (found.length && (!selected || !selectedFound)) {
+          PCL.state.settings.javaPath = found[0].path;
+          API.settings.set({ javaPath: found[0].path }).catch(() => {});
+        }
+        return found;
+      })
+      .catch(() => []);
 
     // 支持 #download:mod 这样的深链接（便于截图与调试）
     const hash = (location.hash || '').replace('#', '');

@@ -15,6 +15,26 @@
       PCL.state.pageData.appInfo = info;
     } catch (e) {}
 
+    // 后台自动寻找本机 Java；找不到不阻塞界面，打开设置时会复用这份结果
+    PCL.javaScan = API.java.detect()
+      .then((list) => {
+        const found = Array.isArray(list) ? list : [];
+        PCL.state.pageData.javaList = found;
+        const selected = PCL.state.settings.javaPath || '';
+        const same = (a, b) => {
+          if (!a || !b) return false;
+          return String(a).replace(/\\/g, '/').replace(/\/+$/, '').toLowerCase() ===
+            String(b).replace(/\\/g, '/').replace(/\/+$/, '').toLowerCase();
+        };
+        const selectedFound = found.some((j) => same(j.path, selected));
+        if (found.length && (!selected || !selectedFound)) {
+          PCL.state.settings.javaPath = found[0].path;
+          API.settings.set({ javaPath: found[0].path }).catch(() => {});
+        }
+        return found;
+      })
+      .catch(() => []);
+
     // 支持 #download:mod 这样的深链接（便于截图与调试）
     const hash = (location.hash || '').replace('#', '');
     const [hp, ht] = hash.split(':');

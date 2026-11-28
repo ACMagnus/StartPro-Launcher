@@ -87,7 +87,7 @@ async function installedJava(rootDir) {
     const exe = findJavaExe(path.join(root, dir));
     if (!exe) continue;
     const info = await probeJava(exe).catch(() => null);
-    if (info) out.push({ ...info, managed: true, dir: path.join(root, dir) });
+    if (info) out.push({ ...info, managed: true, source: '启动器安装', dir: path.join(root, dir) });
   }
   return out;
 }
@@ -235,7 +235,9 @@ async function pickJavaFor(versionId, gameDir, settingsJava, rootDir) {
     uniq.push(j);
   }
   const exact = uniq.find((j) => j.major === req.major);
-  const higher = uniq.filter((j) => j.major > req.major).sort((a, b) => a.major - b.major)[0];
+  // 只对 Java 17 放宽到 21：1.17–1.20.4 用 Java 21 通常还能跑；
+  // Java 8 必须精确匹配，Java 21+ 也不拿 Java 25 这类过新的运行库硬顶，否则容易直接崩。
+  const higher = req.major === 17 ? uniq.find((j) => j.major === 21) : null;
   return { required: req, java: exact || higher || null, list: uniq };
 }
 

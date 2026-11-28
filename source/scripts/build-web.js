@@ -6,7 +6,7 @@ const root = path.join(__dirname, '..', 'renderer');
 const read = (p) => fs.readFileSync(path.join(root, p), 'utf8');
 let doc = read('index.html');
 const css = ['base.css', 'pages.css', 'assistant.css', 'diagnostics.css'].map((n) => read(path.join('css', n))).join('\n');
-const scripts = ['icons.js', 'api.js', 'app.js', 'pages/home.js', 'pages/versions.js', 'pages/download.js', 'pages/multiplayer.js', 'pages/settings.js', 'pages/more.js', 'diagnostics.js', 'assistant.js', 'boot.js'];
+const scripts = ['icons.js', 'api.js', 'app.js', 'pages/home.js', 'pages/select.js', 'pages/versions.js', 'pages/download.js', 'pages/multiplayer.js', 'pages/settings.js', 'pages/more.js', 'diagnostics.js', 'assistant.js', 'boot.js'];
 const js = scripts.map((n) => read(path.join('js', n))).join('\n');
 const icon = 'data:image/png;base64,' + fs.readFileSync(path.join(root, 'assets', 'icon-web.png')).toString('base64');
 doc = doc.replace(/\s*<link rel="stylesheet" href="css\/[^"]+" \/>/g, '');

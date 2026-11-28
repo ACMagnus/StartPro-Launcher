@@ -166,10 +166,11 @@
               ${javaOptions || '<option value="">未检测到 Java</option>'}
               ${!javas.length && currentJava ? `<option value="${PCL.esc(currentJava)}" selected>手动指定</option>` : ''}
             </select>
-            <button class="btn small" id="btnDetectJava">${Icons.refresh}自动搜索</button>
+            <button class="btn small" id="btnDetectJava">${Icons.refresh}自动寻找 Java</button>
             <button class="btn small" id="btnJavaManage">${Icons.download}自动安装</button>
           </div>
         </div>
+        <div class="tiny muted mt-6">启动时会自动扫描 PATH、JAVA_HOME、注册表、常见 JDK 目录和各启动器自带的 Java；也可以点“自动寻找 Java”重新扫描。</div>
       </div>
 
       <div class="card settings-card mt-12">
@@ -254,6 +255,7 @@
             (j) => `<div class="java-item" data-pick-java="${PCL.esc(j.path)}" style="cursor:pointer">
               <span class="tag">Java ${j.major}</span>
               ${j.managed ? '<span class="tag" style="background:#eaf6ee;border-color:#bfe3cb;color:#2c7a4b">启动器安装</span>' : ''}
+              ${j.source && j.source !== 'PATH' ? `<span class="tag" style="background:#f5f7fa;border-color:#e2e6eb;color:#6b7785">${PCL.esc(j.source)}</span>` : ''}
               <span class="grow ellipsis" style="font-size:11.5px">${PCL.esc(j.path)}</span>
               <span class="tiny muted">${PCL.esc(j.output || '')}</span>
             </div>`
@@ -313,13 +315,20 @@
   async function detectJava(state, force) {
     if (state.pageData.javaList && !force) return;
     try {
-      state.pageData.javaList = await API.java.detect();
+      const list = force
+        ? await API.java.detect()
+        : PCL.javaScan
+          ? await PCL.javaScan
+          : await API.java.detect();
+      state.pageData.javaList = Array.isArray(list) ? list : [];
     } catch (e) {
       state.pageData.javaList = [];
     }
     if (force) {
+      PCL.javaScan = Promise.resolve(state.pageData.javaList);
       PCL.render();
-      PCL.toast(`检测到 ${state.pageData.javaList.length} 个 Java`, 'success', 1800);
+      const n = state.pageData.javaList.length;
+      PCL.toast(n ? `自动找到 ${n} 个 Java` : '没有找到已有 Java，可以点“自动安装”', n ? 'success' : 'error', 2400);
     }
   }
 
@@ -698,12 +707,15 @@
       if (dir) {
         await PCL.saveSettings({ gameDir: dir });
         state.settings = await API.settings.get();
+        state.folders = await API.folders.list().catch(() => state.folders || []);
         state.versions = await API.versions.list();
         PCL.render();
       }
     });
     PCL.$('#setGameDir', root)?.addEventListener('change', async (e) => {
       await PCL.saveSettings({ gameDir: e.target.value.trim() });
+      state.settings = await API.settings.get();
+      state.folders = await API.folders.list().catch(() => state.folders || []);
       state.versions = await API.versions.list();
       PCL.toast('游戏目录已更新', 'success', 1600);
       PCL.render();

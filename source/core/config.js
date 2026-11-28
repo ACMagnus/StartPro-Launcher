@@ -11,6 +11,8 @@ const path = require('path');
 const DEFAULTS = {
   // 启动器设置（对应 PCL2 「设置」页）
   gameDir: path.join(os.homedir(), '.minecraft'),
+  gameFolders: [], // 版本选择页左侧的 .minecraft 文件夹列表（第一项通常为 gameDir）
+  starredVersions: [], // 版本选择页收藏的版本 ID（对应 PCL2 的“收藏夹”卡片）
   javaPath: '',
   autoInstallJava: true, // 启动时缺少所需 Java 可自动下载
   gameTitle: '',
@@ -83,9 +85,19 @@ class Config {
       if (['PCL2', 'Pro Start', 'PS', 'PCL2 启动器'].includes(this.data.customInfo)) this.data.customInfo = 'StartPro';
       if (!Array.isArray(this.data.accounts)) this.data.accounts = [];
       if (!Array.isArray(this.data.versionList)) this.data.versionList = [];
+      if (!Array.isArray(this.data.gameFolders)) this.data.gameFolders = [];
+      if (!Array.isArray(this.data.starredVersions)) this.data.starredVersions = [];
+      if (this.data.gameDir && !this.data.gameFolders.includes(this.data.gameDir)) {
+        this.data.gameFolders.unshift(this.data.gameDir);
+      }
     } catch (e) {
       this.data.accounts = this.data.accounts || [];
       this.data.versionList = this.data.versionList || [];
+      this.data.gameFolders = this.data.gameFolders || [];
+      this.data.starredVersions = this.data.starredVersions || [];
+      if (this.data.gameDir && !this.data.gameFolders.includes(this.data.gameDir)) {
+        this.data.gameFolders.unshift(this.data.gameDir);
+      }
     }
     return this.data;
   }

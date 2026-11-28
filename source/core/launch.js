@@ -208,50 +208,284 @@ function probeJava(javaPath) {
   });
 }
 
-/** 自动寻找可用 Java：设置 → PATH → 常见目录 */
-async function detectJavaList(extraPaths = []) {
-  const candidates = new Set();
-  for (const p of extraPaths) if (p) candidates.add(p);
-  const exe = osName() === 'windows' ? 'java.exe' : 'java';
-  for (const dir of (process.env.PATH || '').split(path.delimiter)) {
-    if (!dir) continue;
-    const p = path.join(dir, exe);
-    if (fs.existsSync(p)) candidates.add(p);
+/** 自动寻找可用 Java：环境变量 → PATH → 注册表 → 常见 JDK 目录 → 常见启动器自带 Java */
+function existsFile(p) {
+  try {
+    return fs.statSync(p).isFile();
+  } catch {
+    return false;
   }
-  const common = [
-    '/usr/lib/jvm',
-    '/usr/local/lib/jvm',
-    path.join(os.homedir(), '.jdks'),
-    'C:/Program Files/Java',
-    'C:/Program Files (x86)/Java',
-    'C:/Program Files/Eclipse Adoptium',
-    'C:/Program Files/Microsoft',
-    'C:/Program Files/BellSoft',
+}
+
+function existsDir(p) {
+  try {
+    return fs.statSync(p).isDirectory();
+  } catch {
+    return false;
+  }
+}
+
+function javaHomes(home) {
+  const exe = osName() === 'windows' ? 'java.exe' : 'java';
+  const raw = String(home || '').trim().replace(/^"|"$/g, '');
+  if (!raw) return [];
+  const out = [];
+  // 直接给了 java.exe / bin 目录 / JDK 根目录 / macOS 的 Contents/Home 都兼容
+  if (/^java(\.exe)?$/i.test(path.basename(raw))) out.push(raw);
+  if (path.basename(raw).toLowerCase() === 'bin') out.push(path.join(raw, exe));
+  out.push(path.join(raw, 'bin', exe));
+  out.push(path.join(raw, 'jre', 'bin', exe));
+  out.push(path.join(raw, 'Contents', 'Home', 'bin', exe));
+  out.push(path.join(raw, 'Home', 'bin', exe));
+  return out;
+}
+
+function looksLikeJavaDir(name) {
+  return /java|jdk|jre|jvm|runtime|temurin|adoptium|corretto|zulu|semeru|graal|openjdk|liberica|sapmachine|dragonwell/i.test(String(name || ''));
+}
+
+const JAVA_SKIP_DIRS = new Set([
+  'bin', 'lib', 'conf', 'legal', 'include', 'modules', 'jmods', 'man', 'demo', 'sample',
+  'cache', 'caches', 'logs', 'downloads', 'node_modules', 'resources', 'locales',
+]);
+
+/** 在指定根目录下按 JDK 目录结构扫描，限制深度和目录数量，避免扫全盘 */
+function scanJavaRoot(root, maxDepth, source, found, stats) {
+  if (!root || stats.dirs >= 2400) return;
+  const dir = path.resolve(root);
+  if (!existsDir(dir)) return;
+  stats.dirs += 1;
+  for (const p of javaHomes(dir)) {
+    if (existsFile(p) && !found.has(p)) found.set(p, source);
+  }
+  if (maxDepth <= 0) return;
+  let entries;
+  try {
+    entries = fs.readdirSync(dir, { withFileTypes: true });
+  } catch {
+    return;
+  }
+  for (const ent of entries) {
+    if (!ent.isDirectory()) continue;
+    const name = ent.name;
+    if (JAVA_SKIP_DIRS.has(name.toLowerCase())) continue;
+    const child = path.join(dir, name);
+    // 深度由 maxDepth 控制；对明确选定的 JDK/启动器目录逐层检查，
+    // 不靠目录名过滤，避免漏掉 `21.0.5-tem`、`jdk-17.0.8` 这类版本目录。
+    scanJavaRoot(child, maxDepth - 1, source, found, stats);
+  }
+}
+
+function registryQuery(key) {
+  return new Promise((resolve) => {
+    if (osName() !== 'windows') return resolve('');
+    execFile('reg.exe', ['query', key, '/s'], { timeout: 7000, windowsHide: true }, (err, stdout) => {
+      resolve(err ? '' : String(stdout || ''));
+    });
+  });
+}
+
+/** 从 JavaSoft / Adoptium / Microsoft / Zulu 等注册表项里读 JavaHome / Path */
+async function registryJavaHomes() {
+  if (osName() !== 'windows') return [];
+  const keys = [
+    'HKLM\\SOFTWARE\\JavaSoft',
+    'HKLM\\SOFTWARE\\WOW6432Node\\JavaSoft',
+    'HKCU\\SOFTWARE\\JavaSoft',
+    'HKLM\\SOFTWARE\\Eclipse Adoptium',
+    'HKLM\\SOFTWARE\\WOW6432Node\\Eclipse Adoptium',
+    'HKLM\\SOFTWARE\\Microsoft\\JDK',
+    'HKLM\\SOFTWARE\\Azul Systems\\Zulu',
+    'HKLM\\SOFTWARE\\Amazon Corretto',
+    'HKLM\\SOFTWARE\\BellSoft',
+    'HKLM\\SOFTWARE\\IBM\\Semeru',
   ];
-  for (const root of common) {
-    if (!fs.existsSync(root)) continue;
-    for (const dir of fs.readdirSync(root)) {
-      const p = path.join(root, dir, 'bin', exe);
-      if (fs.existsSync(p)) candidates.add(p);
-      const p2 = path.join(root, dir, dir, 'bin', exe);
-      if (fs.existsSync(p2)) candidates.add(p2);
+  const outputs = await Promise.all(keys.map(registryQuery));
+  const homes = [];
+  const re = /\s(JavaHome|Path|InstallationPath|Installation Directory)\s+REG_[A-Z_]+\s+(.+)$/i;
+  for (const text of outputs) {
+    for (const line of text.split(/\r?\n/)) {
+      const m = re.exec(line);
+      if (!m) continue;
+      const value = m[2].trim().replace(/^"|"$/g, '');
+      if (value && !homes.includes(value)) homes.push(value);
     }
   }
+  return homes;
+}
+
+function probeCandidates(candidates) {
   const results = [];
   const seen = new Set();
-  for (const p of candidates) {
-    let real = p;
-    try {
-      real = fs.realpathSync(p);
-    } catch {
-      /* 保留原路径 */
+  const queue = candidates.slice(0, 90);
+  const worker = async () => {
+    while (queue.length) {
+      const [p, source] = queue.shift();
+      let real = p;
+      try {
+        real = fs.realpathSync(p);
+      } catch {
+        /* 保留原路径 */
+      }
+      if (seen.has(real)) continue;
+      seen.add(real);
+      const info = await probeJava(real);
+      if (info) results.push({ ...info, source: source || '' });
     }
-    if (seen.has(real)) continue;
-    seen.add(real);
-    const info = await probeJava(real);
-    if (info) results.push(info);
+  };
+  return Promise.all(Array.from({ length: Math.min(4, queue.length) }, worker)).then(() => results);
+}
+
+async function detectJavaList(extraPaths = []) {
+  const found = new Map();
+  const stats = { dirs: 0 };
+  const exe = osName() === 'windows' ? 'java.exe' : 'java';
+
+  // 设置里手动指定的路径优先
+  for (const p of extraPaths) {
+    if (!p) continue;
+    for (const q of javaHomes(p)) if (existsFile(q)) found.set(q, '设置中指定');
+    if (existsFile(p)) found.set(p, '设置中指定');
   }
-  return results.sort((a, b) => b.major - a.major);
+
+  // JAVA_HOME / JDK_HOME / JRE_HOME
+  for (const key of ['JAVA_HOME', 'JDK_HOME', 'JRE_HOME', 'GRAALVM_HOME']) {
+    const home = process.env[key];
+    if (!home) continue;
+    for (const q of javaHomes(home)) if (existsFile(q)) found.set(q, key);
+  }
+
+  // PATH 里的 java（以及常见的 bin 目录）
+  for (const dir of String(process.env.PATH || '').split(path.delimiter)) {
+    if (!dir) continue;
+    const p = path.join(dir, exe);
+    if (existsFile(p)) found.set(p, 'PATH');
+  }
+
+  const home = os.homedir();
+  const win = osName() === 'windows';
+  const mac = process.platform === 'darwin';
+  const roots = [];
+  const addRoot = (p, source, depth = 2) => {
+    if (p && existsDir(p)) roots.push([p, source, depth]);
+  };
+
+  if (win) {
+    const pf = process.env.ProgramFiles || 'C:\\Program Files';
+    const pf86 = process.env['ProgramFiles(x86)'] || 'C:\\Program Files (x86)';
+    const local = process.env.LOCALAPPDATA || path.join(home, 'AppData', 'Local');
+    const appData = process.env.APPDATA || path.join(home, 'AppData', 'Roaming');
+    for (const base of [pf, pf86]) {
+      for (const vendor of ['Java', 'Eclipse Adoptium', 'Eclipse Foundation', 'Microsoft', 'Zulu', 'BellSoft', 'Amazon Corretto', 'Semeru', 'IBM\\Semeru', 'GraalVM', 'OpenJDK', 'RedHat', 'SapMachine']) {
+        addRoot(path.join(base, vendor), 'Program Files', 2);
+      }
+    }
+    addRoot(path.join(local, 'Programs', 'Eclipse Adoptium'), '用户安装', 2);
+    addRoot(path.join(local, 'Programs', 'Microsoft'), '用户安装', 2);
+    addRoot(path.join(local, 'Programs', 'Zulu'), '用户安装', 2);
+    addRoot(path.join(home, '.jdks'), '用户 JDK', 1);
+    addRoot(path.join(home, '.gradle', 'jdks'), 'Gradle 下载', 1);
+    addRoot(path.join(appData, 'StartPro Launcher', 'runtime'), '启动器自带', 2);
+    addRoot(path.join(local, 'Programs', 'StartPro Launcher', 'runtime'), '启动器自带', 2);
+    addRoot(path.join(appData, '.minecraft', 'runtime'), '官方启动器', 2);
+    addRoot(path.join(local, 'minecraft', 'runtime'), '官方启动器', 2);
+    addRoot(path.join(appData, 'PCL', 'Java'), 'PCL 自带', 2);
+    addRoot(path.join(appData, 'PCL2', 'Java'), 'PCL 自带', 2);
+    addRoot(path.join(appData, 'HMCL', 'java'), 'HMCL 自带', 2);
+    addRoot(path.join(appData, 'PrismLauncher', 'java'), 'Prism 自带', 2);
+    addRoot(path.join(appData, 'MultiMC', 'java'), 'MultiMC 自带', 2);
+    addRoot(path.join(appData, 'ATLauncher', 'runtime'), 'ATLauncher 自带', 2);
+    addRoot(path.join(appData, 'gdlauncher', 'runtime'), 'GDLauncher 自带', 2);
+    addRoot(path.join(home, '.lunarclient', 'jre'), 'Lunar 自带', 2);
+    // 微软商店版官方启动器的 runtime
+    const packages = path.join(local, 'Packages');
+    if (existsDir(packages)) {
+      try {
+        for (const name of fs.readdirSync(packages)) {
+          if (/Microsoft\.4297127D64EC6/i.test(name)) {
+            addRoot(path.join(packages, name, 'LocalCache', 'Local', 'runtime'), '官方商店版', 2);
+          }
+        }
+      } catch {
+        /* ignore */
+      }
+    }
+  } else if (mac) {
+    for (const p of [
+      '/Library/Java/JavaVirtualMachines',
+      '/System/Library/Java/JavaVirtualMachines',
+      path.join(home, 'Library/Java/JavaVirtualMachines'),
+      '/Library/Internet Plug-Ins/JavaAppletPlugin.plugin/Contents/Home',
+    ]) addRoot(p, '系统 Java', 2);
+    for (const base of ['/opt/homebrew/opt', '/usr/local/opt']) {
+      if (!existsDir(base)) continue;
+      try {
+        for (const name of fs.readdirSync(base)) {
+          if (looksLikeJavaDir(name)) addRoot(path.join(base, name), 'Homebrew', 1);
+        }
+      } catch {
+        /* ignore */
+      }
+    }
+    addRoot('/Applications', '应用程序', 1); // 只扫一层，避免扫整个应用目录
+    addRoot(path.join(home, '.sdkman/candidates/java'), 'SDKMAN', 1);
+    addRoot(path.join(home, '.jdks'), '用户 JDK', 1);
+    addRoot(path.join(home, 'Library/Application Support/PrismLauncher/java'), 'Prism 自带', 2);
+    addRoot(path.join(home, 'Library/Application Support/ModrinthApp'), 'Modrinth 自带', 2);
+  } else {
+    for (const p of [
+      '/usr/lib/jvm',
+      '/usr/java',
+      '/usr/local/lib/jvm',
+      '/usr/local/java',
+      '/opt/java',
+      '/opt/jdk',
+      '/opt/openjdk',
+      path.join(home, '.jdks'),
+      path.join(home, '.sdkman/candidates/java'),
+      path.join(home, '.gradle/jdks'),
+      path.join(home, '.local/share/PrismLauncher/java'),
+      path.join(home, '.local/share/multimc/java'),
+      path.join(home, '.local/share/ATLauncher/runtime'),
+    ]) addRoot(p, '系统 / 启动器 Java', 2);
+    // 一些 Snap 包会把 JDK 放在应用自己的 runtime 下，只扫一层
+    addRoot('/snap', 'Snap', 1);
+  }
+
+  for (const [root, source, depth] of roots) scanJavaRoot(root, depth, source, found, stats);
+
+  // PATH 里可能还有 java 的软链（Windows 上是 where.exe 返回的多个位置）
+  if (win) {
+    await new Promise((resolve) => {
+      execFile('where.exe', ['java'], { timeout: 4000, windowsHide: true }, (err, stdout) => {
+        if (!err && stdout) {
+          for (const line of stdout.split(/\r?\n/)) {
+            const p = line.trim();
+            if (p && existsFile(p)) found.set(p, 'PATH');
+          }
+        }
+        resolve();
+      });
+    });
+  }
+
+  // 注册表可能指向非标准安装目录
+  for (const homePath of await registryJavaHomes()) {
+    for (const p of javaHomes(homePath)) if (existsFile(p)) found.set(p, '注册表');
+  }
+
+  // 兜底：JDK 根目录本身（有些安装器会在 bin 里放 java.exe）
+  for (const [p, source] of found) {
+    if (!existsFile(p)) found.delete(p);
+  }
+  if (!found.size) {
+    // 没有任何显式路径时，至少尝试 PATH 里的命令名，交给 probeJava 判定
+    const p = exe;
+    found.set(p, 'PATH');
+  }
+
+  const results = await probeCandidates([...found.entries()]);
+  return results.sort((a, b) => b.major - a.major || String(b.version).localeCompare(String(a.version), undefined, { numeric: true }));
 }
 
 /** 启动游戏，返回 { proc, logFile, done(promise) } */

@@ -16,6 +16,13 @@ contextBridge.exposeInMainWorld('pcl', {
     get: () => invoke('settings:get'),
     set: (patch) => invoke('settings:set', patch),
   },
+  folders: {
+    list: () => invoke('folders:list'),
+    add: () => invoke('folders:add'),
+    create: () => invoke('folders:create'),
+    switch: (path) => invoke('folders:switch', path),
+    remove: (path) => invoke('folders:remove', path),
+  },
   versions: {
     list: () => invoke('versions:list'),
     del: (id) => invoke('versions:delete', id),

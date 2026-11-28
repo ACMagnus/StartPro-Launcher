@@ -1,0 +1,464 @@
+/* ============================================================
+   StartPro · 版本选择页（PCL2 2.13.1.1 移植）
+   独立整页：蓝色标题栏 + 左侧文件夹列表 + 右侧分组卡片
+   尺寸与分组参考 PCL2 PageSelectLeft/Right、ModMinecraft；
+   PCL2 版权归龙腾猫跃，许可见 THIRD_PARTY_NOTICES.md。
+   ============================================================ */
+
+body.select-mode {
+  background: #f5f5f5;
+}
+
+body.select-mode .titlebar {
+  height: 32px;
+  flex: 0 0 32px;
+  background: linear-gradient(90deg, #127ae2 0%, #268aed 50%, #127ae2 100%);
+  box-shadow: 0 1px 3px rgba(16, 40, 70, 0.18);
+}
+
+body.select-mode .vdtb {
+  padding-left: 14px;
+  gap: 10px;
+}
+
+body.select-mode .vd-back {
+  width: 28px;
+  height: 28px;
+}
+
+body.select-mode .vd-back svg {
+  width: 18px;
+  height: 18px;
+}
+
+body.select-mode .vd-title {
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0;
+}
+
+body.select-mode .win-btn {
+  height: 32px;
+}
+
+body.select-mode .main,
+body.select-mode .view.with-sidebar {
+  background: #f5f5f5;
+}
+
+/* PCL2 版本选择页没有常驻助手悬浮球，避免遮挡卡片 */
+body.select-mode #aiFab {
+  display: none;
+}
+
+/* ------------------------------ 左侧文件夹列表 ------------------------------ */
+body.select-mode .vsel-side {
+  flex: 0 0 300px;
+  padding: 16px 10px 20px;
+  background: #fff;
+  border-right: 1px solid #e6e6e6;
+  box-shadow: none;
+  overflow-y: auto;
+}
+
+body.select-mode .vsel-side-label {
+  display: block;
+  padding: 0 13px;
+  margin: 0 0 6px;
+  color: #737373;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 18px;
+  opacity: 0.78;
+}
+
+body.select-mode .vsel-folder-list + .vsel-side-label {
+  margin-top: 17px;
+}
+
+body.select-mode .vsel-folder-list {
+  gap: 0;
+}
+
+body.select-mode .vsel-folder {
+  min-height: 40px;
+  padding: 4px 30px 4px 13px;
+  gap: 0;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  background: transparent;
+  color: #333;
+}
+
+body.select-mode .vsel-folder:hover,
+body.select-mode .vsel-folder:focus-visible {
+  background: #f7f7f7;
+  border-color: transparent;
+}
+
+body.select-mode .vsel-folder.active {
+  background: transparent;
+  border-color: transparent;
+}
+
+body.select-mode .vsel-folder-main {
+  gap: 1px;
+}
+
+body.select-mode .vsel-folder-main b {
+  color: #333;
+  font-size: 12.5px;
+  font-weight: 600;
+}
+
+body.select-mode .vsel-folder.active .vsel-folder-main b {
+  color: #127ae2;
+}
+
+body.select-mode .vsel-folder-main i {
+  color: #8d8d8d;
+  font-size: 10.5px;
+  line-height: 1.55;
+}
+
+body.select-mode .vsel-folder-more {
+  position: absolute;
+  right: 4px;
+  top: 50%;
+  width: 23px;
+  height: 23px;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  transform: translateY(-50%);
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  color: #8a8a8a;
+  opacity: 0;
+  cursor: pointer;
+  transition: opacity 0.12s ease, background 0.12s ease;
+}
+
+body.select-mode .vsel-folder-more svg {
+  width: 14px;
+  height: 14px;
+}
+
+body.select-mode .vsel-folder:hover .vsel-folder-more,
+body.select-mode .vsel-folder:focus-within .vsel-folder-more {
+  opacity: 1;
+}
+
+body.select-mode .vsel-folder-more:hover {
+  background: #ececec;
+  color: #127ae2;
+}
+
+body.select-mode .vsel-folder-icon,
+body.select-mode .vsel-folder-dot,
+body.select-mode .vsel-folder-remove {
+  display: none;
+}
+
+body.select-mode .vsel-side-item {
+  height: 34px;
+  padding: 0 13px;
+  gap: 9px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  background: transparent;
+  color: #333;
+  font-size: 12.5px;
+  font-weight: 500;
+}
+
+body.select-mode .vsel-side-item svg {
+  width: 17px;
+  height: 17px;
+  opacity: 0.82;
+}
+
+body.select-mode .vsel-side-item:hover {
+  background: #f7f7f7;
+  color: #127ae2;
+}
+
+/* ------------------------------ 右侧版本卡片 ------------------------------ */
+body.select-mode .vsel-grow,
+body.select-mode .view.with-sidebar .vsel-grow {
+  padding: 25px 25px 10px;
+  background: #f5f5f5;
+}
+
+body.select-mode .vsel-list {
+  display: block;
+}
+
+body.select-mode .vsel-card {
+  margin-bottom: 15px;
+  border: 0;
+  border-radius: 5px;
+  background: rgba(255, 255, 255, 0.97);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.13), 0 0 1px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+}
+
+body.select-mode .vsel-card-head {
+  width: 100%;
+  min-height: 38px;
+  padding: 0 15px;
+  display: flex;
+  align-items: center;
+  gap: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+body.select-mode .vsel-card-head:hover {
+  background: #fafafa;
+}
+
+body.select-mode .vsel-card[data-card] .vsel-card-head[aria-expanded="true"] {
+  border-bottom: 0;
+}
+
+body.select-mode .vsel-card-title {
+  color: #333;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+body.select-mode .vsel-card-count {
+  display: none;
+}
+
+body.select-mode .vsel-card-chev {
+  margin-left: auto;
+  color: #666;
+  transform: rotate(90deg);
+}
+
+body.select-mode .vsel-card-chev.open {
+  transform: rotate(-90deg);
+}
+
+body.select-mode .vsel-card-chev svg {
+  width: 12px;
+  height: 12px;
+  stroke-width: 1.5;
+}
+
+body.select-mode .vsel-rows {
+  padding: 0 15px 15px;
+}
+
+body.select-mode .vsel-row {
+  min-height: 42px;
+  padding: 5px 0;
+  gap: 10px;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+}
+
+body.select-mode .vsel-row + .vsel-row {
+  border-top: 0;
+}
+
+body.select-mode .vsel-row:hover,
+body.select-mode .vsel-row:focus-visible {
+  background: #f7f7f7;
+  border-color: transparent;
+}
+
+body.select-mode .vsel-row.current {
+  background: transparent;
+  border-color: transparent;
+}
+
+body.select-mode .vsel-icon {
+  width: 28px;
+  height: 28px;
+}
+
+body.select-mode .vsel-icon .block-icon {
+  width: 26px;
+  height: 26px;
+}
+
+body.select-mode .vsel-row-main {
+  gap: 0;
+}
+
+body.select-mode .vsel-row-name {
+  gap: 0;
+  color: #333;
+  font-size: 12.5px;
+  font-weight: 600;
+  line-height: 1.55;
+}
+
+body.select-mode .vsel-current,
+body.select-mode .vsel-pick {
+  display: none;
+}
+
+body.select-mode .vsel-row-sub {
+  margin-top: 1px;
+  color: #8a8a8a;
+  font-size: 10.5px;
+  line-height: 1.5;
+}
+
+body.select-mode .vsel-row-actions {
+  gap: 3px;
+  opacity: 0;
+  transition: opacity 0.12s ease;
+}
+
+body.select-mode .vsel-row:hover .vsel-row-actions,
+body.select-mode .vsel-row:focus-within .vsel-row-actions {
+  opacity: 1;
+}
+
+body.select-mode .vsel-act {
+  width: 25px;
+  height: 25px;
+  border-radius: 4px;
+  color: #8a8a8a;
+}
+
+body.select-mode .vsel-act:hover {
+  background: #fff;
+  color: #127ae2;
+  box-shadow: 0 1px 3px rgba(30, 70, 120, 0.1);
+}
+
+body.select-mode .vsel-act.danger:hover {
+  color: #d9534f;
+}
+
+body.select-mode .vsel-act.starred {
+  color: #e6a11c;
+}
+
+body.select-mode .vsel-act.starred svg path {
+  fill: currentColor;
+}
+
+body.select-mode .vsel-act svg {
+  width: 14px;
+  height: 14px;
+}
+
+/* ------------------------------ 空状态 ------------------------------ */
+body.select-mode .vsel-empty {
+  width: min(620px, 100%);
+  margin: 55px auto 0;
+  padding: 18px 20px 22px;
+  display: block;
+  background: #fff;
+  border-radius: 5px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.13), 0 0 1px rgba(0, 0, 0, 0.08);
+  text-align: left;
+}
+
+body.select-mode .vsel-empty-title {
+  margin: 0;
+  color: #333;
+  font-size: 19px;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+body.select-mode .vsel-empty-line {
+  height: 2px;
+  margin-top: 9px;
+  background: #e8e8e8;
+}
+
+body.select-mode .vsel-empty-sub {
+  max-width: none;
+  margin: 15px 10px 0;
+  color: #666;
+  font-size: 12.5px;
+  line-height: 1.9;
+}
+
+body.select-mode .vsel-empty .btn {
+  min-width: 140px;
+  height: 35px;
+  margin: 18px auto 0;
+  display: flex;
+  padding: 0 13px;
+}
+
+/* ------------------------------ 文件夹右键菜单 ------------------------------ */
+.vsel-menu {
+  position: fixed;
+  z-index: 80;
+  min-width: 168px;
+  padding: 5px;
+  background: #fff;
+  border: 1px solid #d7d7d7;
+  border-radius: 5px;
+  box-shadow: 0 6px 22px rgba(0, 0, 0, 0.18);
+  font-family: var(--font);
+}
+
+.vsel-menu button {
+  width: 100%;
+  height: 31px;
+  padding: 0 9px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  color: #333;
+  font: 12.5px/1 var(--font);
+  text-align: left;
+  cursor: pointer;
+}
+
+.vsel-menu button svg {
+  width: 15px;
+  height: 15px;
+  flex: 0 0 auto;
+  opacity: 0.8;
+}
+
+.vsel-menu button:hover {
+  background: #eaf3ff;
+  color: #127ae2;
+}
+
+.vsel-menu button.danger:hover {
+  background: #fceceb;
+  color: #c44743;
+}
+
+.vsel-menu button:disabled {
+  color: #b5b5b5;
+  cursor: not-allowed;
+  background: transparent;
+}
+
+.vsel-menu-sep {
+  height: 1px;
+  margin: 4px 2px;
+  background: #ececec;
+}
+
+@media (max-width: 860px) {
+  body.select-mode .vsel-side {
+    flex-basis: 250px;
+  }
+
+  body.select-mode .vsel-grow {
+    padding: 18px 16px 8px;
+  }
+}

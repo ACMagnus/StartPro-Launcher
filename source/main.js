@@ -243,6 +243,56 @@ function makeTask(kind, title) {
   };
 }
 
+function gameFolderName(p) {
+  const abs = String(p || '').replace(/[\\/]+$/, '');
+  const base = path.basename(abs);
+  if (base !== '.minecraft') return base || abs;
+  const parentDir = path.dirname(abs);
+  // PCL2：默认 .minecraft 显示为“官方启动器文件夹”，自定义目录显示父文件夹名
+  if (/AppData[\\/]Roaming$/i.test(parentDir) || path.resolve(parentDir) === path.resolve(os.homedir())) {
+    return '官方启动器文件夹';
+  }
+  return path.basename(parentDir) || '.minecraft';
+}
+
+function listGameFolders() {
+  const active = config.get('gameDir');
+  const folders = config.get('gameFolders') || [];
+  if (active && !folders.includes(active)) folders.unshift(active);
+  return folders.map((p) => ({
+    path: p,
+    name: gameFolderName(p),
+    active: p === active,
+    exists: fs.existsSync(p),
+  }));
+}
+
+function saveGameFolders(paths) {
+  const list = [...new Set((paths || []).filter(Boolean))];
+  config.set({ gameFolders: list });
+  return list;
+}
+
+/** 选择文件夹时，如果选中的是包含 .minecraft 的父目录，自动落到 .minecraft */
+function normalizeSelectedFolder(p) {
+  const abs = path.resolve(String(p || ''));
+  if (!abs) return '';
+  if (path.basename(abs) !== '.minecraft' && fs.existsSync(path.join(abs, '.minecraft'))) {
+    return path.join(abs, '.minecraft');
+  }
+  return abs;
+}
+
+function useGameFolder(p, resetVersion = true) {
+  const abs = path.resolve(String(p || ''));
+  const folders = config.get('gameFolders') || [];
+  if (!folders.includes(abs)) folders.push(abs);
+  const patch = { gameDir: abs, gameFolders: [...new Set(folders)] };
+  if (resetVersion) patch.version = '';
+  config.set(patch);
+  return abs;
+}
+
 function registerIpc() {
   // —— 窗口控制 ——
   ipcMain.handle('win:minimize', () => win && win.minimize());
@@ -266,6 +316,11 @@ function registerIpc() {
     };
   });
   ipcMain.handle('settings:set', (e, patch) => {
+    if (patch && typeof patch.gameDir === 'string' && patch.gameDir.trim()) {
+      const abs = path.resolve(patch.gameDir);
+      const folders = Array.isArray(patch.gameFolders) ? patch.gameFolders : config.get('gameFolders') || [];
+      patch = { ...patch, gameDir: abs, gameFolders: [...new Set([abs, ...folders])] };
+    }
     const data = config.set(patch);
     if (patch && patch.windowOpacity != null && win && !win.isDestroyed()) {
       try {
@@ -330,7 +385,8 @@ function registerIpc() {
     const vs = { ...(config.get('versionSettings') || {}) };
     delete vs[id];
     const vl = (config.get('versionList') || []).filter((v) => v.id !== id);
-    const patch = { versionSettings: vs, versionList: vl };
+    const starred = (config.get('starredVersions') || []).filter((v) => v !== id);
+    const patch = { versionSettings: vs, versionList: vl, starredVersions: starred };
     if (config.get('version') === id) patch.version = '';
     config.set(patch);
     return { ok: true };
@@ -792,6 +848,65 @@ function registerIpc() {
   ipcMain.handle('dir:choose', async () => {
     const r = await dialog.showOpenDialog(win, { properties: ['openDirectory'] });
     return r.canceled ? '' : r.filePaths[0];
+  });
+
+  // —— 版本文件夹列表（PCL2 风格的多 .minecraft 管理） ——
+  ipcMain.handle('folders:list', () => listGameFolders());
+
+  ipcMain.handle('folders:add', async () => {
+    const r = await dialog.showOpenDialog(win, {
+      title: '添加已有 .minecraft 文件夹',
+      buttonLabel: '添加',
+      properties: ['openDirectory'],
+    });
+    if (r.canceled || !r.filePaths[0]) return { ok: false, canceled: true };
+    const p = normalizeSelectedFolder(r.filePaths[0]);
+    if (!fs.existsSync(p) || !fs.statSync(p).isDirectory()) {
+      return { ok: false, error: '文件夹不存在' };
+    }
+    useGameFolder(p, true);
+    return { ok: true, path: p, folders: listGameFolders() };
+  });
+
+  ipcMain.handle('folders:create', async () => {
+    const r = await dialog.showOpenDialog(win, {
+      title: '选择新 .minecraft 文件夹的父目录',
+      buttonLabel: '在这里创建',
+      properties: ['openDirectory', 'createDirectory'],
+    });
+    if (r.canceled || !r.filePaths[0]) return { ok: false, canceled: true };
+    const p = path.join(r.filePaths[0], '.minecraft');
+    try {
+      fs.mkdirSync(p, { recursive: true });
+    } catch (e) {
+      return { ok: false, error: String(e.message || e) };
+    }
+    useGameFolder(p, true);
+    return { ok: true, path: p, folders: listGameFolders() };
+  });
+
+  ipcMain.handle('folders:switch', async (e, p) => {
+    const abs = path.resolve(String(p || ''));
+    const folders = config.get('gameFolders') || [];
+    if (!folders.includes(abs)) throw new Error('该文件夹不在列表中');
+    if (!fs.existsSync(abs)) throw new Error('文件夹不存在或已被移动');
+    useGameFolder(abs, true);
+    return { ok: true, path: abs, folders: listGameFolders() };
+  });
+
+  ipcMain.handle('folders:remove', async (e, p) => {
+    const abs = path.resolve(String(p || ''));
+    const folders = config.get('gameFolders') || [];
+    if (folders.length <= 1) throw new Error('至少要保留一个游戏文件夹');
+    const next = folders.filter((x) => x !== abs);
+    const active = config.get('gameDir');
+    const switched = active === abs;
+    if (switched) {
+      config.set({ gameFolders: next, gameDir: next[0], version: '' });
+    } else {
+      saveGameFolders(next);
+    }
+    return { ok: true, switched, active: config.get('gameDir'), folders: listGameFolders() };
   });
 
   // —— 启动游戏 ——

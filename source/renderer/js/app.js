@@ -309,7 +309,7 @@
 
   function buildNav() {
     const nav = PCL.$('#topnav');
-    PCL.$('#vdBack')?.addEventListener('click', () => PCL.go('versions'));
+    PCL.$('#vdBack')?.addEventListener('click', () => PCL.go(PCL.state.page === 'select' ? 'home' : 'select'));
     nav.innerHTML = NAV.map(
       (n) =>
         `<button class="tab" data-page="${n.id}">${Icons[n.icon] || ''}<span>${n.label}</span></button>`
@@ -322,14 +322,23 @@
 
   function syncNav() {
     const isVD = PCL.state.page === 'version';
-    document.body.classList.toggle('version-mode', isVD);
+    const isSelect = PCL.state.page === 'select';
+    const isDetail = isVD || isSelect;
+    document.body.classList.toggle('version-mode', isDetail);
+    document.body.classList.toggle('select-mode', isSelect);
     document.body.dataset.page = PCL.state.page;
     const bar = PCL.$('#vdBar');
     if (bar) {
-      bar.hidden = !isVD;
-      if (isVD) PCL.$('#vdTitle').textContent = `版本设置 - ${PCL.state.params.id || (PCL.state.settings && PCL.state.settings.version) || ''}`;
+      bar.hidden = !isDetail;
+      if (isDetail) {
+        PCL.$('#vdTitle').textContent = isSelect
+          ? '版本选择'
+          : `版本设置 - ${PCL.state.params.id || (PCL.state.settings && PCL.state.settings.version) || ''}`;
+      }
     }
-    PCL.$$('#topnav .tab').forEach((t) => t.classList.toggle('active', t.dataset.page === PCL.state.page));
+    PCL.$$('#topnav .tab').forEach((t) =>
+      t.classList.toggle('active', t.dataset.page === (PCL.state.page === 'select' ? 'home' : PCL.state.page))
+    );
   }
 
   /* ------------------------------ 路由 ------------------------------ */
@@ -519,12 +528,13 @@
   /* ------------------------------ 初始化 ------------------------------ */
   PCL.init = async () => {
     const API = window.API;
-    const [settings, accounts, versions, news, appInfo] = await Promise.all([
+    const [settings, accounts, versions, news, appInfo, folders] = await Promise.all([
       API.settings.get().catch(() => ({})),
       API.accounts.list().catch(() => []),
       API.versions.list().catch(() => []),
       API.news().catch(() => []),
       API.appInfo().catch(() => ({})),
+      API.folders && API.folders.list ? API.folders.list().catch(() => []) : Promise.resolve([]),
     ]);
     const st = settings || {};
     const vs = Array.isArray(versions) ? versions : [];
@@ -532,6 +542,11 @@
     PCL.state.accounts = accounts || [];
     PCL.state.versions = vs;
     PCL.state.news = news || [];
+    PCL.state.folders = Array.isArray(folders) && folders.length
+      ? folders
+      : st.gameDir
+        ? [{ path: st.gameDir, name: String(st.gameDir).split(/[\\/]/).filter(Boolean).pop() || '.minecraft', active: true, exists: true }]
+        : [];
     PCL.state.pageData.appInfo = appInfo || {};
     // 首屏不要等背景图/音乐解码：主题色已经同步应用，媒体在后台继续加载
     PCL.applyPersonal().catch(() => {});
